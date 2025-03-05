@@ -67,18 +67,10 @@ jobs:
         distribution: 'temurin'
         java-version: 17
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-
-    - name: Accept licenses
+    - name: Install Ninja Build
       run: |
-        yes | sdkmanager --licenses
-
-    - name: Install packages
-      run: yes | sdkmanager "cmake;3.31.5"
-
-    - name: Download gradlew binaries
-      run: ./gradlew
+        sudo apt-get install -y ninja-build
+        ln -s /usr/bin/ninja .
 
     - name: Build with Gradle
       env: 
