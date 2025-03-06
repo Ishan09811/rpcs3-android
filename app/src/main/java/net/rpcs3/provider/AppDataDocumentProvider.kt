@@ -79,7 +79,7 @@ class AppDataDocumentProvider : DocumentsProvider() {
     private fun includeFile(cursor: MatrixCursor, file: File) {
         val flags = when {
             file.isDirectory -> Document.FLAG_DIR_SUPPORTS_CREATE or Document.FLAG_SUPPORTS_DELETE
-            else -> Document.FLAG_SUPPORTS_WRITE or Document.FLAG_SUPPORTS_REMOVE or Document.FLAG_SUPPORTS_DELETE
+            else -> Document.FLAG_SUPPORTS_WRITE or Document.FLAG_SUPPORTS_REMOVE or Document.FLAG_SUPPORTS_DELETE or Document.FLAG_SUPPORTS_COPY or Document.FLAG_SUPPORTS_MOVE
         }
 
         cursor.newRow()
