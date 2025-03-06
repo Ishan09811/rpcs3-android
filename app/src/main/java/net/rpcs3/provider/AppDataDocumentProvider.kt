@@ -11,6 +11,9 @@ import android.provider.DocumentsProvider
 import net.rpcs3.R
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 class AppDataDocumentProvider : DocumentsProvider() {
     companion object {
