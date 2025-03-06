@@ -94,6 +94,69 @@ class AppDataDocumentProvider : DocumentsProvider() {
         return cursor
     }
 
+    override fun isChildDocument(parentDocumentId : String?, documentId : String?) : Boolean {
+        return documentId?.startsWith(parentDocumentId!!) ?: false
+    }
+
+    fun File.resolveWithoutConflict(name : String) : File {
+        var file = resolve(name)
+        if (file.exists()) {
+            var noConflictId = 1 // Makes sure two files don't have the same name by adding a number to the end
+            val extension = name.substringAfterLast('.')
+            val baseName = name.substringBeforeLast('.')
+            while (file.exists())
+                file = resolve("$baseName (${noConflictId++}).$extension")
+        }
+        return file
+    }
+
+    private fun copyDocument(
+        sourceDocumentId : String, sourceParentDocumentId : String,
+        targetParentDocumentId : String?
+    ) : String? {
+        if (!isChildDocument(sourceParentDocumentId, sourceDocumentId))
+            throw FileNotFoundException("Couldn't copy document '$sourceDocumentId' as its parent is not '$sourceParentDocumentId'")
+
+        return copyDocument(sourceDocumentId, targetParentDocumentId)
+    }
+
+    override fun copyDocument(sourceDocumentId : String, targetParentDocumentId : String?) : String? {
+        val parent = obtainFile(targetParentDocumentId!!)
+        val oldFile = obtainFile(sourceDocumentId)
+        val newFile = parent.resolveWithoutConflict(oldFile.name)
+
+        try {
+            if (!(newFile.createNewFile() && newFile.setWritable(true) && newFile.setReadable(true)))
+                throw IOException("Couldn't create new file")
+
+            FileInputStream(oldFile).use { inStream ->
+                FileOutputStream(newFile).use { outStream ->
+                    inStream.copyTo(outStream)
+                }
+            }
+        } catch (e : IOException) {
+            throw FileNotFoundException("Couldn't copy document '$sourceDocumentId': ${e.message}")
+        }
+
+        return obtainDocumentId(newFile)
+    }
+
+    override fun moveDocument(
+        sourceDocumentId : String, sourceParentDocumentId : String?,
+        targetParentDocumentId : String?
+    ) : String? {
+        try {
+            val newDocumentId = copyDocument(
+                sourceDocumentId, sourceParentDocumentId!!,
+                targetParentDocumentId
+            )
+            removeDocument(sourceDocumentId, sourceParentDocumentId)
+            return newDocumentId
+        } catch (e : FileNotFoundException) {
+            throw FileNotFoundException("Couldn't move document '$sourceDocumentId'")
+        }
+    }
+
     override fun createDocument(parentDocumentId: String, mimeType: String, displayName: String): String {
         val parent = obtainFile(parentDocumentId)
         val file = File(parent, displayName)
