@@ -35,6 +35,7 @@ class AppDataDocumentProvider : DocumentsProvider() {
             Document.COLUMN_DISPLAY_NAME,
             Document.COLUMN_MIME_TYPE,
             Document.COLUMN_LAST_MODIFIED,
+            Document.COLUMN_FLAGS,
             Document.COLUMN_SIZE
         )
     }
