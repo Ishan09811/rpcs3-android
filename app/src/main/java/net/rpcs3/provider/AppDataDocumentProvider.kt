@@ -112,11 +112,12 @@ class AppDataDocumentProvider : DocumentsProvider() {
 
     override fun deleteDocument(documentId: String) {
         val file = obtainFile(documentId)
-        if (file.exists()) {
+        val success = if (file.isDirectory) {
             file.deleteRecursively()
         } else {
-            throw FileNotFoundException("File not exists")
+            file.delete()
         }
+        if (!success) throw FileNotFoundException("File not exists")
     }
 
     override fun openDocument(documentId: String, mode: String, signal: CancellationSignal?): ParcelFileDescriptor {
