@@ -6,7 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.MotionEvent
 
 class PadOverlayButton(resources: Resources, image: Bitmap, private val digital1: Int, private val digital2: Int) : BitmapDrawable(resources, image) {
-    private var pressed = false
+    private var pressed = 0
     private var locked = -1
     private var origAlpha = alpha
     fun contains(x: Int, y: Int) = bounds.contains(x, y)
@@ -17,21 +17,21 @@ class PadOverlayButton(resources: Resources, image: Bitmap, private val digital1
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
             if (locked == -1) {
                 locked = event.getPointerId(pointerIndex)
-                pressed = true
+                pressed = (motionEvent.getPressure(pointerIndex) * 255).toInt().coerceIn(0, 255)
                 origAlpha = alpha
                 alpha = 255
                 hit = true
             }
         } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
             if (event.getPointerId(pointerIndex) == locked) {
-                pressed = false
+                pressed = (motionEvent.getPressure(pointerIndex) * 255).toInt().coerceIn(0, 255)
                 locked = -1
                 alpha = origAlpha
                 hit = true
             }
         }
 
-        if (pressed) {
+        if (pressed != 0) {
             padState.digital1 = padState.digital1 or digital1
             padState.digital2 = padState.digital2 or digital2
         } else {
