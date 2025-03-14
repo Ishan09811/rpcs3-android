@@ -17,14 +17,14 @@ class PadOverlayButton(resources: Resources, image: Bitmap, private val digital1
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
             if (locked == -1) {
                 locked = event.getPointerId(pointerIndex)
-                pressed = (motionEvent.getPressure(pointerIndex) * 255).toInt().coerceIn(0, 255)
+                pressed = (event.getPressure(pointerIndex) * 255).toInt().coerceIn(0, 255)
                 origAlpha = alpha
                 alpha = 255
                 hit = true
             }
         } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
             if (event.getPointerId(pointerIndex) == locked) {
-                pressed = (motionEvent.getPressure(pointerIndex) * 255).toInt().coerceIn(0, 255)
+                pressed = (event.getPressure(pointerIndex) * 255).toInt().coerceIn(0, 255)
                 locked = -1
                 alpha = origAlpha
                 hit = true
