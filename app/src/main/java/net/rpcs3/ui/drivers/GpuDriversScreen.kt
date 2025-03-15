@@ -28,7 +28,8 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
         Text(
             text = "Select a GPU Driver",
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         LazyColumn {
