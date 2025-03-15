@@ -25,7 +25,7 @@ object GpuDriverHelper {
 
         // A map between the driver location and its metadata
         val driverMap = mutableMapOf<File, GpuDriverMetadata>()
-        driverMap[0] = getSystemDriverMetadata(context)
+        driverMap[File("/system/vendor")] = getSystemDriverMetadata(context)
 
         gpuDriverDir.listFiles()?.forEach { entry ->
             // Delete any files that aren't a directory
@@ -42,7 +42,7 @@ object GpuDriverHelper {
             }
 
             try {
-                driverMap[entry + 1] = GpuDriverMetadata.deserialize(metadataFile)
+                driverMap[entry] = GpuDriverMetadata.deserialize(metadataFile)
             } catch (e : SerializationException) {
                 Log.w(TAG, "Failed to load gpu driver metadata for ${entry.name}, skipping\n${e.message}")
             }
