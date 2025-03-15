@@ -54,6 +54,7 @@ import net.rpcs3.RPCS3
 import net.rpcs3.dialogs.AlertDialogQueue
 import net.rpcs3.ui.games.GamesScreen
 import net.rpcs3.ui.settings.SettingsScreen
+import net.rpcs3.ui.drivers.GpuDriversScreen
 
 @Preview
 @Composable
@@ -76,7 +77,8 @@ fun AppNavHost() {
             route = "games"
         ) {
             GamesDestination(
-                navigateToSettings = { navController.navigate("settings") }
+                navigateToSettings = { navController.navigate("settings") },
+                navigateToDrivers = { navController.navigate("drivers") }
             )
         }
 
@@ -84,6 +86,14 @@ fun AppNavHost() {
             route = "settings"
         ) {
             SettingsScreen(
+                navigateBack = navController::navigateUp
+            )
+        }
+
+        composable(
+            route = "drivers"
+        ) {
+            GpuDriversScreen(
                 navigateBack = navController::navigateUp
             )
         }
@@ -194,6 +204,13 @@ fun GamesDestination(
                         selected = false,
                         icon = { Icon(Icons.Default.Settings, null) },
                         onClick = navigateToSettings
+                    )
+
+                    NavigationDrawerItem(
+                        label = { Text("Custom GPU Drivers") },
+                        selected = false,
+                        icon = { Icon(Icons.Default.Settings, null) },
+                        onClick = navigateToDrivers
                     )
                 }
             }
