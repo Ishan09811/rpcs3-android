@@ -103,7 +103,8 @@ fun AppNavHost() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GamesDestination(
-    navigateToSettings: () -> Unit
+    navigateToSettings: () -> Unit,
+    navigateToDrivers: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
