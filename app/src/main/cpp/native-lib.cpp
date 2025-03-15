@@ -57,6 +57,7 @@
 #include <android/log.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
+#include <adrenotools/driver.h>
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
@@ -2325,4 +2326,13 @@ Java_net_rpcs3_RPCS3_systemInfo(JNIEnv *env, jobject) {
   }
 
   return wrap(env, result);
+}
+
+extern "C" JNIEXPORT jboolean JNICALL Java_net_rpcs3_utils_GpuDriverHelper_supportsCustomDriverLoading(JNIEnv *env, jobject instance) {
+    constexpr auto KgslPath{"/dev/kgsl-3d0"};
+    return access(KgslPath, F_OK) == 0;
+}
+
+extern "C" JNIEXPORT void JNICALL Java_net_rpcs3_utils_GpuDriverHelper_forceMaxGpuClocks(JNIEnv *env, jobject instance, jboolean enable) {
+    adrenotools_set_turbo(enable);
 }
