@@ -3,6 +3,8 @@ package net.rpcs3.ui.drivers
 
 import android.content.Context
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import net.rpcs3.utils.GpuDriverHelper
 import net.rpcs3.utils.GpuDriverMetadata
 import java.io.File
+import java.io.InputStream
 
 @Composable
 fun GpuDriversScreen(navigateBack: () -> Unit) {
@@ -24,22 +27,49 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
     val drivers = remember { mutableStateOf(GpuDriverHelper.getInstalledDrivers(context)) }
     val selectedDriver = remember { mutableStateOf<String?>(null) }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text(
-            text = "Select a GPU Driver",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 16.dp),
-            color = MaterialTheme.colorScheme.onSurface
-        )
+    val driverPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            try {
+                val inputStream: InputStream? = context.contentResolver.openInputStream(it)
+                inputStream?.use { stream ->
+                    GpuDriverHelper.installDriver(context, stream)
+                    drivers.value = getInstalledDrivers(context)
+                }
+            } catch (e: Exception) {
+                Log.e("GpuDriver", "Error installing driver: ${e.message}")
+            }
+        }
+    }
 
-        LazyColumn {
-            items(drivers.value.entries.toList()) { (file, metadata) ->
-                DriverItem(
-                    file = file,
-                    metadata = metadata,
-                    isSelected = metadata.label == selectedDriver.value,
-                    onSelect = { selectedDriver.value = metadata.label }
-                )
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { filePickerLauncher.launch("application/zip") },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Text("+", color = MaterialTheme.colorScheme.onPrimary)
+            }
+        }
+    ) { paddingValues ->
+        Column(modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp)) {
+            Text(
+                text = "Select a GPU Driver",
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(bottom = 16.dp),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            LazyColumn {
+                items(drivers.value.entries.toList()) { (file, metadata) ->
+                    DriverItem(
+                        file = file,
+                        metadata = metadata,
+                        isSelected = metadata.label == selectedDriver.value,
+                        onSelect = { selectedDriver.value = metadata.label }
+                    )
+                }
             }
         }
     }
