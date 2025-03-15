@@ -46,7 +46,7 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { filePickerLauncher.launch("application/zip") },
+                onClick = { driverPickerLauncher.launch("application/zip") },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Text("+", color = MaterialTheme.colorScheme.onPrimary)
