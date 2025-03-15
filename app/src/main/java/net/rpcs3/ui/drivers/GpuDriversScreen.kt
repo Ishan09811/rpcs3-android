@@ -57,17 +57,18 @@ fun DriverItem(
             .padding(vertical = 4.dp)
             .clickable { onSelect() },
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) Color.Blue.copy(alpha = 0.2f) else Color.White
+            containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
+            else MaterialTheme.colorScheme.surfaceVariant
         ),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = metadata.label, style = MaterialTheme.typography.bodyLarge)
+            Text(text = metadata.label, style = MaterialTheme.typography.bodyLarge, MaterialTheme.colorScheme.onSurface)
             Text(
                 text = metadata.description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
