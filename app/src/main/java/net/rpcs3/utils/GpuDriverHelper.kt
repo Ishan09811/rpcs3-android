@@ -69,7 +69,7 @@ object GpuDriverHelper {
         }
 
         try {
-            // TODO: ZipUtil.unzip(stream, installTempDir)
+            ZipUtil.unzip(stream, installTempDir)
         } catch (e : Exception) {
             e.printStackTrace()
             installTempDir.deleteRecursively()
@@ -85,7 +85,7 @@ object GpuDriverHelper {
         }
 
         try {
-            // TODO: ZipUtil.unzip(file, installTempDir)
+            ZipUtil.unzip(file, installTempDir)
         } catch (e : Exception) {
             e.printStackTrace()
             installTempDir.deleteRecursively()
@@ -150,7 +150,7 @@ object GpuDriverHelper {
     }
 
     fun ensureFileRedirectDir(context : Context) {
-        File(context.getPublicFilesDir(), GPU_DRIVER_FILE_REDIRECT_DIR).apply {
+        File(context.getExternalFilesDir(null), GPU_DRIVER_FILE_REDIRECT_DIR).apply {
             if (!isDirectory) {
                 delete()
                 mkdirs()
