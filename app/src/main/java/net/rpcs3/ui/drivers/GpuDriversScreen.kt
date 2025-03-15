@@ -12,11 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import net.rpcs3.utils.GpuDriverHelper
 import java.io.File
 
 @Composable
-fun GpuDriversScreen(context: Context) {
+fun GpuDriversScreen(navigateBack: () -> Unit) {
+    val context = LocalContext.current
     val drivers = remember { mutableStateOf(GpuDriverHelper.getInstalledDrivers(context)) }
     val selectedDriver = remember { mutableStateOf<String?>(null) }
 
