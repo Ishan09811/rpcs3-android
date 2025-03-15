@@ -70,4 +70,16 @@ object ZipUtils {
             } while (true)
         }
     }
+
+    @Throws(IOException::class)
+    private fun createNewFile(destinationDir : File, zipEntry : ZipEntry) : File {
+        val destFile = File(destinationDir, zipEntry.name)
+        val destDirPath = destinationDir.canonicalPath
+        val destFilePath = destFile.canonicalPath
+
+        if (!destFilePath.startsWith(destDirPath + File.separator))
+            throw IOException("Entry is outside of the target dir: " + zipEntry.name)
+
+        return destFile
+    }
 }
