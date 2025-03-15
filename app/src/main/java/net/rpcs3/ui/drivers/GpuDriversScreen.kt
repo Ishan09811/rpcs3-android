@@ -3,6 +3,7 @@ package net.rpcs3.ui.drivers
 
 import android.content.Context
 import android.util.Log
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -35,7 +36,7 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
                 val inputStream: InputStream? = context.contentResolver.openInputStream(it)
                 inputStream?.use { stream ->
                     GpuDriverHelper.installDriver(context, stream)
-                    drivers.value = getInstalledDrivers(context)
+                    drivers.value = GpuDriverHelper.getInstalledDrivers(context)
                 }
             } catch (e: Exception) {
                 Log.e("GpuDriver", "Error installing driver: ${e.message}")
@@ -95,7 +96,11 @@ fun DriverItem(
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = metadata.label, style = MaterialTheme.typography.bodyLarge, MaterialTheme.colorScheme.onSurface)
+            Text(
+                text = metadata.label, 
+                style = MaterialTheme.typography.bodyLarge, 
+                color = MaterialTheme.colorScheme.onSurface
+            )
             Text(
                 text = metadata.description,
                 style = MaterialTheme.typography.bodyMedium,
