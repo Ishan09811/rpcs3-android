@@ -42,9 +42,7 @@ object GpuDriverHelper {
             }
 
             try {
-                if (entry == 0)
-                    driverMap[entry + 1] = GpuDriverMetadata.deserialize(metadataFile)
-                else driverMap[entry] = GpuDriverMetadata.deserialize(metadataFile)
+                driverMap[entry + 1] = GpuDriverMetadata.deserialize(metadataFile)
             } catch (e : SerializationException) {
                 Log.w(TAG, "Failed to load gpu driver metadata for ${entry.name}, skipping\n${e.message}")
             }
