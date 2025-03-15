@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import net.rpcs3.utils.GpuDriverHelper
+import net.rpcs3.utils.GpuDriverMetadata
 import java.io.File
 
 @Composable
