@@ -6,7 +6,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
 
-object ZipUtils {
+object ZipUtil {
   
     @Throws(IOException::class)
     fun unzip(file : File, targetDirectory : File) {
