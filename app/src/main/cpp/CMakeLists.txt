@@ -119,6 +119,7 @@ set(USE_SYSTEM_ZLIB on)
 set(USE_LIBEVDEV off)
 
 add_subdirectory(rpcs3 EXCLUDE_FROM_ALL)
+add_subdirectory(libadrenotools)
 
 add_library(${CMAKE_PROJECT_NAME} SHARED
     native-lib.cpp
@@ -153,6 +154,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     log
     rpcs3_emu
     nativehelper
+    libadrenotools
     3rdparty::libusb
     3rdparty::hidapi
     3rdparty::wolfssl
