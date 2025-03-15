@@ -154,7 +154,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     log
     rpcs3_emu
     nativehelper
-    libadrenotools
+    adrenotools
     3rdparty::libusb
     3rdparty::hidapi
     3rdparty::wolfssl
