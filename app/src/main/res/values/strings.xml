@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">RPCS3</string>
+    <string name="settings">Settings</string>
+    <string name="system_info">System Info</string>
+    <string name="delete">Delete</string>
+    <string name="missing_key">Missing key</string>
+    <string name="missing_key_desc">This game requires key to play</string>
+    <string name="firmware_missing">Firmware Missing</string>
+    <string name="firmware_missing_desc">Please install the required firmware to continue.</string>
+    <string name="firmware_missing_desc_wait">Please wait until firmware installs successfully to continue.</string>
+    <string name="game_compiling_not_finished">Game compiling isn't finished yet</string>
+    <string name="game_compiling_not_finished_desc">Please wait until game compiles to continue.</string>
 </resources>
