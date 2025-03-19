@@ -14,8 +14,8 @@ object AlertDialogQueue {
         message: String,
         onConfirm: () -> Unit = {},
         onDismiss: (() -> Unit)? = null,
-        confirmText: String = "OK",
-        dismissText: String = "Cancel"
+        confirmText: String = android.R.string.ok,
+        dismissText: String = android.R.string.cancel
     ) {
         dialogs.add(DialogData(title, message, onConfirm, onDismiss, confirmText, dismissText))
     }
