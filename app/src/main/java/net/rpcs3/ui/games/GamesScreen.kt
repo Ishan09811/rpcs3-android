@@ -46,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource 
 import coil3.compose.AsyncImage
 import net.rpcs3.FirmwareRepository
 import net.rpcs3.Game
@@ -58,6 +59,7 @@ import net.rpcs3.ProgressRepository
 import net.rpcs3.RPCS3
 import net.rpcs3.RPCS3Activity
 import net.rpcs3.dialogs.AlertDialogQueue
+import net.rpcs3.R
 import java.io.File
 import kotlin.concurrent.thread
 
@@ -142,8 +144,8 @@ fun GameItem(game: Game) {
                 onClick = click@{
                     if (game.hasFlag(GameFlag.Locked)) {
                         AlertDialogQueue.showDialog(
-                            title = "Missing key",
-                            message = "This game requires key to play"
+                            title = stringResource(R.string.missing_key),
+                            message = stringResource(R.string.missing_key_desc)
                         )
 
                         return@click
@@ -151,13 +153,13 @@ fun GameItem(game: Game) {
 
                     if (FirmwareRepository.version.value == null) {
                         AlertDialogQueue.showDialog(
-                            title = "Firmware Missing",
-                            message = "Please install the required firmware to continue."
+                            title = stringResource(R.string.firmware_missing),
+                            message = stringResource(R.string.firmware_missing_desc)
                         )
                     } else if (FirmwareRepository.progressChannel.value != null) {
                         AlertDialogQueue.showDialog(
-                            title = "Firmware Missing",
-                            message = "Please wait until firmware installs successfully to continue."
+                            title = stringResource(R.string.firmware_missing),
+                            message = stringResource(R.string.firmware_missing_wait)
                         )
                     } else if (game.info.path != "$" && game.findProgress(
                             arrayOf(
@@ -168,8 +170,8 @@ fun GameItem(game: Game) {
                     ) {
                         if (game.findProgress(GameProgressType.Compile) != null) {
                             AlertDialogQueue.showDialog(
-                                title = "Game compiling isn't finished yet",
-                                message = "Please wait until game compiles to continue."
+                                title = stringResource(R.string.game_compiling_not_finished),
+                                message = stringResource(R.string.game_compiling_not_finished_desc)
                             )
                         } else {
                             GameRepository.onBoot(game)
