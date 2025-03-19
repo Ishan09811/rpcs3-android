@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -61,6 +62,7 @@ import net.rpcs3.ui.settings.AdvancedSettingsScreen
 import net.rpcs3.ui.settings.SettingsScreen
 import org.json.JSONObject
 import net.rpcs3.ui.drivers.GpuDriversScreen
+import net.rpcs3.R
 
 @Preview
 @Composable
@@ -242,18 +244,18 @@ fun GamesDestination(
                     )
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     NavigationDrawerItem(
-                        label = { Text("Settings") },
+                        label = { Text(stringResource(R.string.settings)) },
                         selected = false,
                         icon = { Icon(Icons.Default.Settings, null) },
                         onClick = navigateToSettings
                     )
 
                     NavigationDrawerItem(
-                        label = { Text("System Info") },
+                        label = { Text(stringResource(R.string.system_info)) },
                         selected = false,
                         icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
                         onClick = {
-                            AlertDialogQueue.showDialog("System Info", RPCS3.instance.systemInfo())
+                            AlertDialogQueue.showDialog(stringResource(R.string.system_info), RPCS3.instance.systemInfo())
                         }
                     )
                 }
@@ -270,7 +272,7 @@ fun GamesDestination(
                     ),
                     title = {
                         Text(
-                            "RPCS3",
+                            stringResource(R.string.app_name),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
