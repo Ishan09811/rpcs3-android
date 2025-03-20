@@ -61,6 +61,10 @@ import net.rpcs3.RPCS3
 import net.rpcs3.utils.GpuDriverHelper
 import net.rpcs3.utils.GpuDriverInstallResult
 import net.rpcs3.utils.GpuDriverMetadata
+import net.rpcs3.utils.DriversFetcher
+import net.rpcs3.utils.DriversFetcher.FetchResult
+import net.rpcs3.utils.DriversFetcher.FetchResultOutput
+import net.rpcs3.utils.DriversFetcher.DownloadResult
 import java.io.File
 
 
