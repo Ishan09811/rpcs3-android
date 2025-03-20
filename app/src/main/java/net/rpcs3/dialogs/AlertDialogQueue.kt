@@ -8,8 +8,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.*
 
 object AlertDialogQueue {
     val dialogs = mutableStateListOf<DialogData>()
@@ -32,7 +31,7 @@ object AlertDialogQueue {
     }
 
     @Composable
-    fun AlertDialogQueue.AlertDialog() {
+    fun AlertDialog() {
         if (dialogs.isEmpty()) return
 
         val dialog = dialogs.first()
