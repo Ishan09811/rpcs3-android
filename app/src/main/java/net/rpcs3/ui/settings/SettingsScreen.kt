@@ -368,16 +368,16 @@ fun SettingsScreen(
                     icon = { Icon(Icons.Outlined.Build, contentDescription = null) },
                     description = "Install alternative drivers for potentially better performance or accuracy"
                 ) {
-                    if (RPCS3.instance.supportsCustomDriverLoading()) {
+                    //if (RPCS3.instance.supportsCustomDriverLoading()) {
                         navigateTo("drivers")
-                    } else {
+                    /*} else {
                         AlertDialogQueue.showDialog(
                             title = "Custom drivers not supported",
                             message = "Custom driver loading isn't currently supported for this device",
                             confirmText = "Close",
                             dismissText = ""
                         )
-                    }
+                    }*/
                 }
             }
         }
