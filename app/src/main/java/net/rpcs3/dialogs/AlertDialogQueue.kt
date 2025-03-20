@@ -1,5 +1,10 @@
 package net.rpcs3.dialogs
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,38 +32,47 @@ object AlertDialogQueue {
     }
 
     @Composable
-    fun AlertDialog() {
-        if (dialogs.isEmpty()) {
-            return
-        }
+    fun AlertDialogQueue.AlertDialog() {
+        if (dialogs.isEmpty()) return
 
         val dialog = dialogs.first()
-        val onDismiss = dialog.onDismiss
+        var visible by remember { mutableStateOf(true) }
 
-        AlertDialog(
-            onDismissRequest = {
-                dialog.onDismiss?.invoke()
-                dismissDialog()
-            },
-            title = { Text(dialog.title) },
-            text = { Text(dialog.message) },
-            confirmButton = {
-                TextButton(onClick = {
-                    dialog.onConfirm()
+        AnimatedVisibility(
+            visible = visible,
+            enter = fadeIn() + scaleIn(initialScale = 0.8f),
+            exit = fadeOut() + scaleOut(targetScale = 0.8f)
+        ) {
+            AlertDialog(
+                onDismissRequest = {
+                    visible = false
+                    dialog.onDismiss?.invoke()
                     dismissDialog()
-                }) {
-                    Text(dialog.confirmText)
+                },
+                title = { Text(dialog.title) },
+                text = { Text(dialog.message) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        visible = false
+                        dialog.onConfirm()
+                        dismissDialog()
+                    }) {
+                        Text(dialog.confirmText)
+                    }
+                },
+                dismissButton = dialog.onDismiss?.let {
+                    {
+                        TextButton(onClick = {
+                            visible = false
+                            it()
+                            dismissDialog()
+                        }) {
+                            Text(dialog.dismissText)
+                        }
+                    }
                 }
-            },
-            dismissButton = if (onDismiss == null) null else ({
-                TextButton(onClick = {
-                    onDismiss()
-                    dismissDialog()
-                }) {
-                    Text(dialog.dismissText)
-                }
-            })
-        )
+            )
+        }
     }
 }
 
