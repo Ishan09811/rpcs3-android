@@ -77,6 +77,8 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
     val topBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var showDriverDialog by remember { mutableStateOf(false) }
     var shouldHandleGpuDriverImport by remember { mutableStateOf(false) }
+    var shouldFetchAndShowDrivers by remember { mutableStateOf(false) }
+    var repoUrl by remember { mutableStateOf<String?>(null) }
 
     val driverPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -127,7 +129,18 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
         GpuDriverImportDialog(
             onDismiss = { shouldHandleGpuDriverImport = false },
             onFetchClick = { url ->
-                //shouldFetchAndShowDrivers = true
+                shouldFetchAndShowDrivers = true
+            }
+        )
+    }
+
+    if (shouldFetchAndShowDrivers) {
+        fetchAndShowDrivers(
+            repoUrl = repoUrl!!,
+            bypassValidation = false,
+            onDismiss = { shouldFetchAndShowDrivers = false },
+            onDownloadDriver = { url, name ->
+                //downloadDriver(url, name)
             }
         )
     }
@@ -402,3 +415,101 @@ fun handleGpuDriverImport(
         }
     )
 }
+
+@Composable
+fun fetchAndShowDrivers(
+    repoUrl: String,
+    bypassValidation: Boolean = false,
+    onDismiss: () -> Unit,
+    onDownloadDriver: (String, String) -> Unit
+) {
+    var isLoading by remember { mutableStateOf(true) }
+    var fetchResult by remember { mutableStateOf<FetchResult?>(null) }
+    var fetchedDrivers by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
+    var chosenIndex by remember { mutableStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        val fetchOutput = DriversFetcher.fetchReleases(repoUrl, bypassValidation)
+        isLoading = false
+
+        if (fetchOutput.result is FetchResult.Error) {
+            fetchResult = fetchOutput.result
+        } else if (fetchOutput.result is FetchResult.Warning) {
+            fetchResult = fetchOutput.result
+        } else {
+            fetchedDrivers = fetchOutput.fetchedDrivers
+        }
+    }
+
+    fetchResult?.let {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(stringResource(R.string.error)) },
+            text = { Text(it.message ?: "Something unexpected occurred while fetching $repoUrl drivers") },
+            confirmButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(text = stringResource(android.R.string.ok))
+                }
+            }
+        )
+        return
+    }
+
+    if (isLoading) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(stringResource(R.string.fetching)) },
+            text = {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(stringResource(R.string.please_wait))
+                }
+            },
+            confirmButton = {}
+        )
+        return
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.drivers)) },
+        text = {
+            Column {
+                fetchedDrivers.forEachIndexed { index, driver ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { chosenIndex = index }
+                            .padding(8.dp)
+                    ) {
+                        RadioButton(
+                            selected = chosenIndex == index,
+                            onClick = { chosenIndex = index }
+                        )
+                        Text(text = driver.first, modifier = Modifier.padding(start = 8.dp))
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                val chosenDriver = fetchedDrivers[chosenIndex]
+                onDownloadDriver(chosenDriver.second, chosenDriver.first)
+                onDismiss()
+            }) {
+                Text(text = stringResource(R.string.driver_import))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(android.R.string.cancel))
+            }
+        }
+    )
+}
+
