@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,6 +75,8 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val topBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    var showDriverDialog by remember { mutableStateOf(false) }
+    var shouldHandleGpuDriverImport by remember { mutableStateOf(false) }
 
     val driverPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -107,6 +110,27 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
     }
 
     selectedDriver = prefs.getString("selected_gpu_driver", "Default")
+
+    if (showDriverDialog) {
+        DriverDialog(
+            onDismiss = { showDialog = false },
+            onInstallClick = {
+                driverPickerLauncher.launch("application/zip")
+            },
+            onImportClick = {
+                handleGpuDriverImport()
+            }
+        )
+    }
+
+    if (shouldHandleGpuDriverImport) {
+        GpuDriverImportDialog(
+            onDismiss = { shouldHandleGpuDriverImport = false },
+            onFetchClick = { url ->
+                //shouldFetchAndShowDrivers = true
+            }
+        )
+    }
 
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }, topBar = {
         TopAppBar(
@@ -171,7 +195,7 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { driverPickerLauncher.launch("application/zip") },
+                onClick = { showDriverDialog = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -280,5 +304,101 @@ fun DriverItem(
         content = { DriverItemContent(metadata, isSelected, onSelect) },
         enableDismissFromEndToStart = true,
         enableDismissFromStartToEnd = false
+    )
+}
+
+@Composable
+fun DriverDialog(
+    onDismiss: () -> Unit,
+    onInstallClick: () -> Unit,
+    onImportClick: () -> Unit
+) {
+    val items = listOf(
+        "Import",
+        "Install"
+    )
+    var selectedItemIndex by remember { mutableStateOf(0) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(text = "Choose")
+        },
+        text = {
+            Column {
+                items.forEachIndexed { index, text ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { selectedItemIndex = index }
+                            .padding(8.dp)
+                    ) {
+                        RadioButton(
+                            selected = selectedItemIndex == index,
+                            onClick = { selectedItemIndex = index }
+                        )
+                        Text(text = text, modifier = Modifier.padding(start = 8.dp))
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                if (selectedItemIndex == 1) {
+                    onInstallClick()
+                } else {
+                    onImportClick()
+                }
+                onDismiss()
+            }) {
+                Text(text = stringResource(android.R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(android.R.string.cancel))
+            }
+        }
+    )
+}
+
+@Composable
+fun handleGpuDriverImport(
+    onDismiss: () -> Unit,
+    onFetchClick: (String) -> Unit
+) {
+    var textInputValue by remember { mutableStateOf(stringResource(R.string.default_driver_repo_url)) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(text = stringResource(R.string.enter_repo_url))
+        },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = textInputValue,
+                    onValueChange = { textInputValue = it },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                if (textInputValue.isNotEmpty()) {
+                    onFetchClick(textInputValue)
+                }
+                onDismiss()
+            }) {
+                Text(text = stringResource(R.string.fetch))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(android.R.string.cancel))
+            }
+        }
     )
 }
