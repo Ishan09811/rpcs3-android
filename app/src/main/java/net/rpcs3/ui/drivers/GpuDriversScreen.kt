@@ -444,7 +444,7 @@ fun fetchAndShowDrivers(
     fetchResult?.let {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text(stringResource(R.string.error)) },
+            title = { Text("Error")) },
             text = { Text(it.message ?: "Something unexpected occurred while fetching $repoUrl drivers") },
             confirmButton = {
                 TextButton(onClick = onDismiss) {
@@ -458,7 +458,7 @@ fun fetchAndShowDrivers(
     if (isLoading) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text(stringResource(R.string.fetching)) },
+            title = { Text("Fetching") },
             text = {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -466,7 +466,7 @@ fun fetchAndShowDrivers(
                 ) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(stringResource(R.string.please_wait))
+                    Text("Please wait")
                 }
             },
             confirmButton = {}
@@ -476,7 +476,7 @@ fun fetchAndShowDrivers(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.drivers)) },
+        title = { Text("Drivers") },
         text = {
             Column {
                 fetchedDrivers.forEachIndexed { index, driver ->
@@ -502,7 +502,7 @@ fun fetchAndShowDrivers(
                 onDownloadDriver(chosenDriver.second, chosenDriver.first)
                 onDismiss()
             }) {
-                Text(text = stringResource(R.string.driver_import))
+                Text(text = "Import")
             }
         },
         dismissButton = {
