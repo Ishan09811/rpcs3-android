@@ -47,6 +47,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -417,7 +418,7 @@ fun handleGpuDriverImport(
                 }
                 onDismiss()
             }) {
-                Text(text = stringResource(R.string.fetch))
+                Text(text = "Fetch")
             }
         },
         dismissButton = {
@@ -437,7 +438,7 @@ fun fetchAndShowDrivers(
 ) {
     var isLoading by remember { mutableStateOf(true) }
     var fetchResult by remember { mutableStateOf<FetchResult?>(null) }
-    var fetchedDrivers by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
+    var fetchedDrivers by remember { mutableStateOf<List<Pair<String, String?>>>(emptyList()) }
     var chosenIndex by remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
