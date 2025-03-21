@@ -46,12 +46,14 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -391,12 +393,12 @@ fun handleGpuDriverImport(
     onDismiss: () -> Unit,
     onFetchClick: (String) -> Unit
 ) {
-    var textInputValue by remember { mutableStateOf(stringResource(R.string.default_driver_repo_url)) }
+    var textInputValue by remember { mutableStateOf("https://github.com/K11MCH1/AdrenoToolsDrivers") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = stringResource(R.string.enter_repo_url))
+            Text(text = "Enter repo url")
         },
         text = {
             Column {
@@ -454,7 +456,7 @@ fun fetchAndShowDrivers(
     fetchResult?.let {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("Error")) },
+            title = { Text("Error") },
             text = { Text(it.message ?: "Something unexpected occurred while fetching $repoUrl drivers") },
             confirmButton = {
                 TextButton(onClick = onDismiss) {
@@ -522,4 +524,3 @@ fun fetchAndShowDrivers(
         }
     )
 }
-
