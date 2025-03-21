@@ -45,6 +45,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -129,7 +130,7 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
                 driverPickerLauncher.launch("application/zip")
             },
             onImportClick = {
-                handleGpuDriverImport()
+                shouldHandleGpuDriverImport = true
             }
         )
     }
