@@ -455,10 +455,16 @@ fun fetchAndShowDrivers(
     }
 
     fetchResult?.let {
+        val errorMessage = when (it) {
+            is FetchResult.Error -> result.message!!
+            is FetchResult.Warning -> result.message!!
+            else -> "Something unexpected occurred while fetching $repoUrl drivers"
+        }
+        
         AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text("Error") },
-            text = { Text(it.message ?: "Something unexpected occurred while fetching $repoUrl drivers") },
+            text = { Text(errorMessage) },
             confirmButton = {
                 TextButton(onClick = onDismiss) {
                     Text(text = stringResource(android.R.string.ok))
