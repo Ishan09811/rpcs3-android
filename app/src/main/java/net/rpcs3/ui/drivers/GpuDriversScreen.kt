@@ -47,6 +47,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -495,47 +496,61 @@ fun fetchAndShowDrivers(
         return
     }
 
-    AlertDialog(
+    BasicAlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Drivers") },
-        text = {
-            Box(modifier = Modifier.fillMaxWidth().padding(all = 0.dp)) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 300.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    fetchedDrivers.forEachIndexed { index, driver ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { chosenIndex = index }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            RadioButton(
-                                selected = chosenIndex == index,
-                                onClick = { chosenIndex = index }
-                            )
-                            Text(text = driver.first, modifier = Modifier.padding(start = 8.dp))
+        content = {
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                tonalElevation = 6.dp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text("Drivers", style = MaterialTheme.typography.headlineSmall)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 300.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        fetchedDrivers.forEachIndexed { index, driver ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { chosenIndex = index }
+                                    .padding(vertical = 4.dp)
+                            ) {
+                                RadioButton(
+                                    selected = chosenIndex == index,
+                                    onClick = { chosenIndex = index }
+                                )
+                                Text(text = driver.first, modifier = Modifier.padding(start = 8.dp))
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(onClick = onDismiss) {
+                            Text(text = stringResource(android.R.string.cancel))
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TextButton(onClick = {
+                            val chosenDriver = fetchedDrivers[chosenIndex]
+                            onDownloadDriver(chosenDriver.second!!, chosenDriver.first!!)
+                            onDismiss()
+                        }) {
+                            Text(text = "Import")
                         }
                     }
                 }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = {
-                val chosenDriver = fetchedDrivers[chosenIndex]
-                onDownloadDriver(chosenDriver.second!!, chosenDriver.first!!)
-                onDismiss()
-            }) {
-                Text(text = "Import")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(android.R.string.cancel))
             }
         }
     )
