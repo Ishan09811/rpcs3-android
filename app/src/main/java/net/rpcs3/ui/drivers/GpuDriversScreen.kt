@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -446,13 +449,11 @@ fun fetchAndShowDrivers(
         val fetchOutput = DriversFetcher.fetchReleases(repoUrl, bypassValidation)
         isLoading = false
 
-        if (fetchOutput.result is FetchResult.Error) {
-            fetchResult = fetchOutput.result
-        } else if (fetchOutput.result is FetchResult.Warning) {
-            fetchResult = fetchOutput.result
-        } else {
-            fetchedDrivers = fetchOutput.fetchedDrivers
+        fetchResult = when (fetchOutput.result) {
+            is FetchResult.Error, is FetchResult.Warning -> fetchOutput.result
+            else -> null
         }
+        if (fetchOutput.result is FetchResult.Success) fetchedDrivers = fetchOutput.fetchedDrivers
     }
 
     fetchResult?.let {
@@ -461,7 +462,7 @@ fun fetchAndShowDrivers(
             is FetchResult.Warning -> it.message!!
             else -> "Something unexpected occurred while fetching $repoUrl drivers"
         }
-        
+
         AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text("Error") },
@@ -498,20 +499,27 @@ fun fetchAndShowDrivers(
         onDismissRequest = onDismiss,
         title = { Text("Drivers") },
         text = {
-            Column {
-                fetchedDrivers.forEachIndexed { index, driver ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { chosenIndex = index }
-                            .padding(8.dp)
-                    ) {
-                        RadioButton(
-                            selected = chosenIndex == index,
-                            onClick = { chosenIndex = index }
-                        )
-                        Text(text = driver.first, modifier = Modifier.padding(start = 8.dp))
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 300.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    fetchedDrivers.forEachIndexed { index, driver ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { chosenIndex = index }
+                                .padding(8.dp)
+                        ) {
+                            RadioButton(
+                                selected = chosenIndex == index,
+                                onClick = { chosenIndex = index }
+                            )
+                            Text(text = driver.first, modifier = Modifier.padding(start = 8.dp))
+                        }
                     }
                 }
             }
