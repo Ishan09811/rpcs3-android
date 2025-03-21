@@ -142,6 +142,7 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
         handleGpuDriverImport(
             onDismiss = { shouldHandleGpuDriverImport = false },
             onFetchClick = { url ->
+                repoUrl = url
                 shouldFetchAndShowDrivers = true
             }
         )
