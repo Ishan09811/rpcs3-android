@@ -512,7 +512,7 @@ fun fetchAndShowDrivers(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable { chosenIndex = index }
-                                .padding(8.dp)
+                                .padding(vertical = 4.dp)
                         ) {
                             RadioButton(
                                 selected = chosenIndex == index,
