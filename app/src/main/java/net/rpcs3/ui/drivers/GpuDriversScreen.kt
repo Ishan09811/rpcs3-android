@@ -499,7 +499,7 @@ fun fetchAndShowDrivers(
         onDismissRequest = onDismiss,
         title = { Text("Drivers") },
         text = {
-            Box(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.fillMaxWidth().padding(all = 0.dp)) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
