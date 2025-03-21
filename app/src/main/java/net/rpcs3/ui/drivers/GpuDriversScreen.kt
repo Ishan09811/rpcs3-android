@@ -456,8 +456,8 @@ fun fetchAndShowDrivers(
 
     fetchResult?.let {
         val errorMessage = when (it) {
-            is FetchResult.Error -> result.message!!
-            is FetchResult.Warning -> result.message!!
+            is FetchResult.Error -> it.message!!
+            is FetchResult.Warning -> it.message!!
             else -> "Something unexpected occurred while fetching $repoUrl drivers"
         }
         
