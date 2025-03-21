@@ -512,7 +512,7 @@ fun fetchAndShowDrivers(
         confirmButton = {
             TextButton(onClick = {
                 val chosenDriver = fetchedDrivers[chosenIndex]
-                onDownloadDriver(chosenDriver.second, chosenDriver.first)
+                onDownloadDriver(chosenDriver.second!!, chosenDriver.first!!)
                 onDismiss()
             }) {
                 Text(text = "Import")
