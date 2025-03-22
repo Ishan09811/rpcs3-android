@@ -6,7 +6,6 @@ import android.content.res.AssetFileDescriptor
 import android.database.Cursor
 import android.net.Uri
 import android.provider.DocumentsContract
-import android.util.Log
 import androidx.core.content.edit
 import net.rpcs3.GameInfo
 import net.rpcs3.GameRepository
@@ -29,59 +28,63 @@ private data class InstallableFolder(
 object FileUtil {
     fun installPackages(context: Context, rootFolderUri: Uri) {
         thread {
-            val workList = mutableListOf<Uri>()
-            workList.add(rootFolderUri)
+            try {
+                val workList = mutableListOf<Uri>()
+                workList.add(rootFolderUri)
 
-            val batchFiles = mutableListOf<Uri>()
-            val batchDirs = mutableListOf<InstallableFolder>()
+                val batchFiles = mutableListOf<Uri>()
+                val batchDirs = mutableListOf<InstallableFolder>()
 
-            while (workList.isNotEmpty()) {
-                val currentFolderUri = workList.removeAt(0)
+                while (workList.isNotEmpty()) {
+                    val currentFolderUri = workList.removeAt(0)
 
-                val paramSfo =
-                    uriOpenFile(context, currentFolderUri, "PS3_GAME/PARAM.SFO") ?: uriOpenFile(
-                        context, currentFolderUri, "PARAM.SFO"
+                    val paramSfo =
+                        uriOpenFile(context, currentFolderUri, "PS3_GAME/PARAM.SFO") ?: uriOpenFile(
+                            context, currentFolderUri, "PARAM.SFO"
+                        )
+
+                    if (paramSfo != null) {
+                        val installDir =
+                            RPCS3.instance.getDirInstallPath(paramSfo.parcelFileDescriptor.fd)
+                        paramSfo.close()
+
+                        if (installDir != null) {
+                            batchDirs += InstallableFolder(currentFolderUri, installDir)
+                        } else {
+                            workList.add(currentFolderUri)
+                        }
+
+                        continue
+                    }
+
+                    listFiles(currentFolderUri, context).forEach { item ->
+                        if (item.isDirectory) {
+                            workList.add(item.uri)
+                        } else {
+                            batchFiles += item.uri
+                        }
+                    }
+                }
+
+                if (batchFiles.isNotEmpty()) {
+                    PrecompilerService.start(
+                        context, PrecompilerServiceAction.Install, ArrayList(batchFiles)
                     )
+                }
 
-                if (paramSfo != null) {
-                    val installDir =
-                        RPCS3.instance.getDirInstallPath(paramSfo.parcelFileDescriptor.fd)
-                    paramSfo.close()
-
-                    if (installDir != null) {
-                        batchDirs += InstallableFolder(currentFolderUri, installDir)
-                    } else {
-                        workList.add(currentFolderUri)
+                batchDirs.forEach {
+                    if (GameRepository.find(it.targetPath) != null) {
+                        return@forEach
                     }
 
-                    continue
-                }
-
-                listFiles(currentFolderUri, context).forEach { item ->
-                    if (item.isDirectory) {
-                        workList.add(item.uri)
-                    } else {
-                        batchFiles += item.uri
-                    }
+                    val progress = ProgressRepository.create(context, "Installing Directory")
+                    GameRepository.add(arrayOf(GameInfo("$")), progress)
+                    copyDirUriToInternalStorage(context, it.uri, it.targetPath, progress)
+                    RPCS3.instance.collectGameInfo(it.targetPath, -1L)
                 }
             }
-
-            if (batchFiles.isNotEmpty()) {
-                PrecompilerService.start(
-                    context, PrecompilerServiceAction.Install, ArrayList(batchFiles)
-                )
-            }
-
-            batchDirs.forEach {
-                if (GameRepository.find(it.targetPath) != null) {
-                    return@forEach
-                }
-
-                val progress = ProgressRepository.create(context, "Installing Directory")
-                GameRepository.add(arrayOf(GameInfo("$")), progress)
-                copyDirUriToInternalStorage(context, it.uri, it.targetPath, progress)
-                RPCS3.instance.collectGameInfo(it.targetPath, -1L)
-            }
+        } catch (e: Exception) {
+            Log.e("[FileUtil]: Cannot install packages error: " + e.message)
         }
     }
 
@@ -142,7 +145,7 @@ object FileUtil {
                 bos.write(buf)
             } while (bis.read(buf) != -1)
         } catch (e: IOException) {
-            e.printStackTrace()
+            Log.e("[FileUtil]: Cannot save file error: " + e.message)
         } finally {
             bis?.close()
             bos?.close()
@@ -203,7 +206,7 @@ object FileUtil {
                 results.add(document)
             }
         } catch (e: Exception) {
-            Log.e("FileUtil", "Cannot list file error: " + e.message)
+            Log.e("[FileUtil]: Cannot list file error: " + e.message)
         } finally {
             c?.close()
         }
