@@ -457,7 +457,7 @@ fun fetchAndShowDrivers(
     repoUrl: String,
     bypassValidation: Boolean = false,
     onDismiss: () -> Unit,
-    onDownloadDriver: @Composable (String, String) -> Unit
+    onDownloadDriver: (String, String) -> Unit
 ) {
     var isLoading by remember { mutableStateOf(true) }
     var fetchResult by remember { mutableStateOf<FetchResult?>(null) }
