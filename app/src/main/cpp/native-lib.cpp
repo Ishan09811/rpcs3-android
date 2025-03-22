@@ -2536,3 +2536,18 @@ Java_net_rpcs3_RPCS3_supportsCustomDriverLoading(JNIEnv *env,
                                                  jobject instance) {
   return access("/dev/kgsl-3d0", F_OK) == 0;
 }
+
+extern "C" JNIEXPORT void JNICALL
+Java_net_rpcs3_utils_Log_log(JNIEnv *env, jclass clazz, jint level, jstring message) {
+    const char *nativeMessage = env->GetStringUTFChars(message, nullptr);
+    
+    switch (level) {
+        case 0: rpcs3_android.debug(message); break;
+        case 1: rpcs3_android.info(message); break;
+        case 2: rpcs3_android.warning(message); break;
+        case 3: rpcs3_android.error(message); break;
+        default: rpcs3_android.info(message); break;
+    }
+
+    env->ReleaseStringUTFChars(message, nativeMessage);
+}
