@@ -47,9 +47,9 @@ fun SwitchPreference(
         leadingIcon = leadingIcon,
         trailingContent = {
             Switch(
-                checked = checked,
+                checked = checkedState,
                 onCheckedChange = { onClick(it) },
-                enabled = checkedState,
+                enabled = enabled,
                 colors = switchColors
             )
         },
