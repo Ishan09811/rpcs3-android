@@ -176,7 +176,15 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
         downloadDriver(
             chosenUrl = driverToDownload!!.first,
             chosenName = driverToDownload!!.second,
-            onDismiss = { shouldDownloadDriver = false }
+            onDismiss = { 
+                shouldDownloadDriver = false 
+                coroutineScope.launch(Dispatchers.IO) {
+                    val updatedDrivers = GpuDriverHelper.getInstalledDrivers(context)
+                    withContext(Dispatchers.Main) {
+                        drivers = updatedDrivers
+                    }
+                }
+            }
         )
     }
 
