@@ -102,7 +102,9 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
     var shouldHandleGpuDriverImport by remember { mutableStateOf(false) }
     var shouldFetchAndShowDrivers by remember { mutableStateOf(false) }
     var repoUrl by remember { mutableStateOf<String?>(null) }
-
+    var driverToDownload by remember { mutableStateOf<Pair<String, String>?>(null) }
+    var shouldDownloadDriver by remember { mutableStateOf(false) }
+    
     val driverPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -164,12 +166,17 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
             bypassValidation = false,
             onDismiss = { shouldFetchAndShowDrivers = false },
             onDownloadDriver = { url, name ->
-                downloadDriver(
-                    chosenUrl = url,
-                    chosenName = name,
-                    onDismiss = {}
-                )
+                driverToDownload = Pair(url, name)
+                shouldDownloadDriver = true
             }
+        )
+    }
+
+    if (shouldDownloadDriver) {
+        downloadDriver(
+            chosenUrl = driverToDownload!!.first,
+            chosenName = driverToDownload!!.second,
+            onDismiss = { shouldDownloadDriver = false }
         )
     }
 
