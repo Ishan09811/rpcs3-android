@@ -164,11 +164,13 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
             bypassValidation = false,
             onDismiss = { shouldFetchAndShowDrivers = false },
             onDownloadDriver = { url, name ->
-                downloadDriver(
-                    chosenUrl = url,
-                    chosenName = name,
-                    onDismiss = {}
-                )
+                LaunchedEffect(Unit) {
+                    downloadDriver(
+                        chosenUrl = url,
+                        chosenName = name,
+                        onDismiss = {}
+                    )
+                }
             }
         )
     }
