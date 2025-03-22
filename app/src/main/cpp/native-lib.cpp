@@ -2563,10 +2563,10 @@ Java_net_rpcs3_utils_Log_log(JNIEnv *env, jclass clazz, jint level, jstring mess
     
     switch (level) {
         case 0: rpcs3_android.debug("%s", nativeMessage); break;
-        case 1: rpcs3_android.info("%s", nativeMessage); break;
+        case 1: rpcs3_android.notice("%s", nativeMessage); break;
         case 2: rpcs3_android.warning("%s", nativeMessage); break;
         case 3: rpcs3_android.error("%s", nativeMessage); break;
-        default: rpcs3_android.info("%s", nativeMessage); break;
+        default: rpcs3_android.notice("%s", nativeMessage); break;
     }
 
     env->ReleaseStringUTFChars(message, nativeMessage);
