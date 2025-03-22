@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +39,7 @@ fun SwitchPreference(
     onClick: (Boolean) -> Unit,
     onLongClick: () -> Unit = {}
 ) {
-    val onValueUpdated: (Boolean) -> Unit = { newValue -> onClick(newValue) }
+    val checkedState by rememberUpdatedState(checked)
     RegularPreference(
         title = title,
         subtitle = subtitle,
@@ -48,12 +49,12 @@ fun SwitchPreference(
             Switch(
                 checked = checked,
                 onCheckedChange = { onValueUpdated(it) },
-                enabled = enabled,
+                enabled = checkedState,
                 colors = switchColors
             )
         },
         enabled = enabled,
-        onClick = { onValueUpdated(!checked) },
+        onClick = { onClick(!checkedState) },
         onLongClick = onLongClick
     )
 }
