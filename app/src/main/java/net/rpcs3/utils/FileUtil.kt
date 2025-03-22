@@ -82,9 +82,9 @@ object FileUtil {
                     copyDirUriToInternalStorage(context, it.uri, it.targetPath, progress)
                     RPCS3.instance.collectGameInfo(it.targetPath, -1L)
                 }
+            } catch (e: Exception) {
+                Log.e("[FileUtil]: Cannot install packages error: " + e.message)
             }
-        } catch (e: Exception) {
-            Log.e("[FileUtil]: Cannot install packages error: " + e.message)
         }
     }
 
