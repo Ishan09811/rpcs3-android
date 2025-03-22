@@ -503,7 +503,7 @@ fun fetchAndShowDrivers(
     }
 
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-    val maxHeight = if (isLandscape) 200.dp else 300.dp
+    val maxHeight = if (isLandscape) 168.dp else 300.dp
     
     BasicAlertDialog(
         onDismissRequest = onDismiss,
