@@ -508,10 +508,10 @@ fun fetchAndShowDrivers(
                 tonalElevation = 6.dp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 16.dp)
             ) {
-                Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                    Text("Drivers", style = MaterialTheme.typography.headlineSmall)
+                Column(modifier = Modifier.padding(vertical = 16.dp)) {
+                    Text("Drivers", modifier = Modifier.padding(horizontal = 16.dp), style = MaterialTheme.typography.headlineSmall)
                     Spacer(modifier = Modifier.height(8.dp))
                     
                     Column(
@@ -526,7 +526,7 @@ fun fetchAndShowDrivers(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable { chosenIndex = index }
-                                    .padding(vertical = 4.dp)
+                                    .padding(vertical = 4.dp, horizontal = 16.dp)
                             ) {
                                 RadioButton(
                                     selected = chosenIndex == index,
