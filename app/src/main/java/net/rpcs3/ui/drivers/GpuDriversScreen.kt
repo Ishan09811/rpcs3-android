@@ -163,7 +163,11 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
             bypassValidation = false,
             onDismiss = { shouldFetchAndShowDrivers = false },
             onDownloadDriver = { url, name ->
-                //downloadDriver(url, name)
+                downloadDriver(
+                    chosenUrl = url,
+                    chosenName = name,
+                    onDismiss = {}
+                )
             }
         )
     }
@@ -562,6 +566,74 @@ fun fetchAndShowDrivers(
                             Text(text = "Import")
                         }
                     }
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun downloadDriver(
+    chosenUrl: String,
+    chosenName: String,
+    onDismiss: () -> Unit
+) {
+    var progress by remember { mutableStateOf(0f) }
+    var isIndeterminate by remember { mutableStateOf(true) }
+    var downloadCompleted by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            val driverFile = File("${context.getExternalFilesDir(null).absolutePath}/cache/$chosenName.zip")
+            if (!driverFile.exists()) driverFile.createNewFile()
+
+            val result = DriversFetcher.downloadAsset(chosenUrl, driverFile) { downloadedBytes, totalBytes ->
+                if (totalBytes > 0) {
+                    isIndeterminate = false
+                    progress = downloadedBytes.toFloat() / totalBytes
+                }
+            }
+
+            if (result is DownloadResult.Success) {
+                withContext(Dispatchers.Main) {
+                    val installResult = GpuDriverHelper.installDriver(context, FileInputStream(driverFile))
+                    Toast.makeText(context, GpuDriverHelper.resolveInstallResultString(installResult), Toast.LENGTH_LONG).show()
+                    downloadCompleted = true
+                    if (installResult == GpuDriverInstallResult.Success) {
+                        onDismiss()
+                    }
+                }
+            } else if (result is DownloadResult.Error) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Failed to import $chosenName: ${result.message}", Toast.LENGTH_SHORT).show()
+                    onDismiss()
+                }
+            }
+
+            driverFile.delete()
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = { if (!isIndeterminate) onDismiss() },
+        title = { Text("Downloading") },
+        text = {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                LinearProgressIndicator(
+                    progress = if (isIndeterminate) ProgressIndicatorDefaults.CircularIndeterminate else progress,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                if (!isIndeterminate) {
+                    Text(text = "${(progress * 100).toInt()}%")
+                }
+            }
+        },
+        confirmButton = {
+            if (downloadCompleted) {
+                TextButton(onClick = onDismiss) {
+                    Text("OK")
                 }
             }
         }
