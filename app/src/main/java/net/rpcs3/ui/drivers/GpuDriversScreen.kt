@@ -164,13 +164,11 @@ fun GpuDriversScreen(navigateBack: () -> Unit) {
             bypassValidation = false,
             onDismiss = { shouldFetchAndShowDrivers = false },
             onDownloadDriver = { url, name ->
-                LaunchedEffect(Unit) {
-                    downloadDriver(
-                        chosenUrl = url,
-                        chosenName = name,
-                        onDismiss = {}
-                    )
-                }
+                downloadDriver(
+                    chosenUrl = url,
+                    chosenName = name,
+                    onDismiss = {}
+                )
             }
         )
     }
@@ -452,7 +450,7 @@ fun fetchAndShowDrivers(
     repoUrl: String,
     bypassValidation: Boolean = false,
     onDismiss: () -> Unit,
-    onDownloadDriver: (String, String) -> Unit
+    onDownloadDriver: @Composable (String, String) -> Unit
 ) {
     var isLoading by remember { mutableStateOf(true) }
     var fetchResult by remember { mutableStateOf<FetchResult?>(null) }
