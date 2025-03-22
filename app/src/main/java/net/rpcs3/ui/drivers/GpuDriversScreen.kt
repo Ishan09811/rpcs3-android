@@ -599,7 +599,7 @@ fun downloadDriver(
             if (result is DownloadResult.Success) {
                 withContext(Dispatchers.Main) {
                     val installResult = GpuDriverHelper.installDriver(context, FileInputStream(driverFile))
-                    Toast.makeText(context, GpuDriverHelper.resolveInstallResultString(installResult), Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, GpuDriverHelper.resolveInstallResultToString(installResult), Toast.LENGTH_LONG).show()
                     downloadCompleted = true
                     if (installResult == GpuDriverInstallResult.Success) {
                         onDismiss()
@@ -621,10 +621,17 @@ fun downloadDriver(
         title = { Text("Downloading") },
         text = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                LinearProgressIndicator(
-                    progress = if (isIndeterminate) null else progress,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                // we can't set indeterminate explicitly so.
+                if (isIndeterminate) {
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    LinearProgressIndicator(
+                        progress = progress,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
                 if (!isIndeterminate) {
                     Text(text = "${(progress * 100).toInt()}%")
