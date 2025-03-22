@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
@@ -84,7 +85,7 @@ import net.rpcs3.utils.DriversFetcher.FetchResult
 import net.rpcs3.utils.DriversFetcher.FetchResultOutput
 import net.rpcs3.utils.DriversFetcher.DownloadResult
 import java.io.File
-
+import java.io.FileInputStream
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -585,7 +586,7 @@ fun downloadDriver(
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
-            val driverFile = File("${context.getExternalFilesDir(null).absolutePath}/cache/$chosenName.zip")
+            val driverFile = File("${context.getExternalFilesDir(null)!!.absolutePath}/cache/$chosenName.zip")
             if (!driverFile.exists()) driverFile.createNewFile()
 
             val result = DriversFetcher.downloadAsset(chosenUrl, driverFile) { downloadedBytes, totalBytes ->
@@ -621,7 +622,7 @@ fun downloadDriver(
         text = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 LinearProgressIndicator(
-                    progress = if (isIndeterminate) ProgressIndicatorDefaults.CircularIndeterminate else progress,
+                    progress = if (isIndeterminate) null else progress,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
