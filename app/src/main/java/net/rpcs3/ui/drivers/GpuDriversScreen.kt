@@ -2,6 +2,7 @@ package net.rpcs3.ui.drivers
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.content.res.Configuration
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -65,6 +66,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
@@ -500,6 +502,9 @@ fun fetchAndShowDrivers(
         return
     }
 
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val maxHeight = if (isLandscape) 200.dp else 300.dp
+    
     BasicAlertDialog(
         onDismissRequest = onDismiss,
         content = {
@@ -517,7 +522,7 @@ fun fetchAndShowDrivers(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(max = 300.dp)
+                            .heightIn(max = maxHeight)
                             .verticalScroll(rememberScrollState())
                     ) {
                         fetchedDrivers.forEachIndexed { index, driver ->
