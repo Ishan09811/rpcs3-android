@@ -2562,11 +2562,11 @@ Java_net_rpcs3_utils_Log_log(JNIEnv *env, jclass clazz, jint level, jstring mess
     const char *nativeMessage = env->GetStringUTFChars(message, nullptr);
     
     switch (level) {
-        case 0: rpcs3_android.debug(nativeMessage); break;
-        case 1: rpcs3_android.info(nativeMessage); break;
-        case 2: rpcs3_android.warning(nativeMessage); break;
-        case 3: rpcs3_android.error(nativeMessage); break;
-        default: rpcs3_android.info(nativeMessage); break;
+        case 0: rpcs3_android.debug(std::string(nativeMessage)); break;
+        case 1: rpcs3_android.info(std::string(nativeMessage)); break;
+        case 2: rpcs3_android.warning(std::string(nativeMessage)); break;
+        case 3: rpcs3_android.error(std::string(nativeMessage)); break;
+        default: rpcs3_android.info(std::string(nativeMessage)); break;
     }
 
     env->ReleaseStringUTFChars(message, nativeMessage);
