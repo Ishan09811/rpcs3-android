@@ -546,11 +546,14 @@ fun fetchAndShowDrivers(
                             Text(text = stringResource(android.R.string.cancel))
                         }
                         Spacer(modifier = Modifier.width(8.dp))
-                        TextButton(onClick = {
-                            val chosenDriver = fetchedDrivers[chosenIndex]
-                            onDownloadDriver(chosenDriver.second!!, chosenDriver.first!!)
-                            onDismiss()
-                        }) {
+                        TextButton(
+                            onClick = {
+                                val chosenDriver = fetchedDrivers[chosenIndex]
+                                onDownloadDriver(chosenDriver.second!!, chosenDriver.first!!)
+                                onDismiss()
+                            }, 
+                            modifier = Modifier.padding(end = 16.dp)
+                        ) {
                             Text(text = "Import")
                         }
                     }
