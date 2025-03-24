@@ -63,22 +63,22 @@ class RPCS3Activity : Activity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> gamePadState.digital1 = gamePadState.digital1 or Digital1Flags.CELL_PAD_CTRL_UP.bit
-            KeyEvent.KEYCODE_DPAD_DOWN -> gamePadState.digital1 = gamePadState.digital1 or Digital1Flags.CELL_PAD_CTRL_DOWN.bit
-            KeyEvent.KEYCODE_DPAD_LEFT -> gamePadState.digital1 = gamePadState.digital1 or Digital1Flags.CELL_PAD_CTRL_LEFT.bit
-            KeyEvent.KEYCODE_DPAD_RIGHT -> gamePadState.digital1 = gamePadState.digital1 or Digital1Flags.CELL_PAD_CTRL_RIGHT.bit
-            KeyEvent.KEYCODE_BUTTON_A -> gamePadState.digital2 = gamePadState.digital2 or Digital2Flags.CELL_PAD_CTRL_CROSS.bit
-            KeyEvent.KEYCODE_BUTTON_B -> gamePadState.digital2 = gamePadState.digital2 or Digital2Flags.CELL_PAD_CTRL_CIRCLE.bit
-            KeyEvent.KEYCODE_BUTTON_X -> gamePadState.digital2 = gamePadState.digital2 or Digital2Flags.CELL_PAD_CTRL_SQUARE.bit
-            KeyEvent.KEYCODE_BUTTON_Y -> gamePadState.digital2 = gamePadState.digital2 or Digital2Flags.CELL_PAD_CTRL_TRIANGLE.bit
-            KeyEvent.KEYCODE_BUTTON_L1 -> gamePadState.digital2 = gamePadState.digital2 or Digital2Flags.CELL_PAD_CTRL_L1.bit
-            KeyEvent.KEYCODE_BUTTON_R1 -> gamePadState.digital2 = gamePadState.digital2 or Digital2Flags.CELL_PAD_CTRL_R1.bit
-            KeyEvent.KEYCODE_BUTTON_L2 -> gamePadState.digital2 = gamePadState.digital2 or Digital2Flags.CELL_PAD_CTRL_L2.bit
-            KeyEvent.KEYCODE_BUTTON_R2 -> gamePadState.digital2 = gamePadState.digital2 or Digital2Flags.CELL_PAD_CTRL_R2.bit
-            KeyEvent.KEYCODE_BUTTON_START -> gamePadState.digital1 = gamePadState.digital1 or Digital1Flags.CELL_PAD_CTRL_START.bit
-            KeyEvent.KEYCODE_BUTTON_SELECT -> gamePadState.digital1 = gamePadState.digital1 or Digital1Flags.CELL_PAD_CTRL_SELECT.bit
-            KeyEvent.KEYCODE_BUTTON_THUMBL -> gamePadState.digital1 = gamePadState.digital1 or Digital1Flags.CELL_PAD_CTRL_L3.bit
-            KeyEvent.KEYCODE_BUTTON_THUMBR -> gamePadState.digital1 = gamePadState.digital1 or Digital1Flags.CELL_PAD_CTRL_R3.bit
+            KeyEvent.KEYCODE_DPAD_UP -> gamePadState.digital[1] = gamePadState.digital[1] or Digital1Flags.CELL_PAD_CTRL_UP.bit
+            KeyEvent.KEYCODE_DPAD_DOWN -> gamePadState.digital[1] = gamePadState.digital[1] or Digital1Flags.CELL_PAD_CTRL_DOWN.bit
+            KeyEvent.KEYCODE_DPAD_LEFT -> gamePadState.digital[1] = gamePadState.digital[1] or Digital1Flags.CELL_PAD_CTRL_LEFT.bit
+            KeyEvent.KEYCODE_DPAD_RIGHT -> gamePadState.digital[1] = gamePadState.digital[1] or Digital1Flags.CELL_PAD_CTRL_RIGHT.bit
+            KeyEvent.KEYCODE_BUTTON_A -> gamePadState.digital[2] = gamePadState.digital[2] or Digital2Flags.CELL_PAD_CTRL_CROSS.bit
+            KeyEvent.KEYCODE_BUTTON_B -> gamePadState.digital[2] = gamePadState.digital[2] or Digital2Flags.CELL_PAD_CTRL_CIRCLE.bit
+            KeyEvent.KEYCODE_BUTTON_X -> gamePadState.digital[2] = gamePadState.digital[2] or Digital2Flags.CELL_PAD_CTRL_SQUARE.bit
+            KeyEvent.KEYCODE_BUTTON_Y -> gamePadState.digital[2] = gamePadState.digital[2] or Digital2Flags.CELL_PAD_CTRL_TRIANGLE.bit
+            KeyEvent.KEYCODE_BUTTON_L1 -> gamePadState.digital[2] = gamePadState.digital[2] or Digital2Flags.CELL_PAD_CTRL_L1.bit
+            KeyEvent.KEYCODE_BUTTON_R1 -> gamePadState.digital[2] = gamePadState.digital[2] or Digital2Flags.CELL_PAD_CTRL_R1.bit
+            KeyEvent.KEYCODE_BUTTON_L2 -> gamePadState.digital[2] = gamePadState.digital[2] or Digital2Flags.CELL_PAD_CTRL_L2.bit
+            KeyEvent.KEYCODE_BUTTON_R2 -> gamePadState.digital[2] = gamePadState.digital[2] or Digital2Flags.CELL_PAD_CTRL_R2.bit
+            KeyEvent.KEYCODE_BUTTON_START -> gamePadState.digital[1] = gamePadState.digital[1] or Digital1Flags.CELL_PAD_CTRL_START.bit
+            KeyEvent.KEYCODE_BUTTON_SELECT -> gamePadState.digital[1] = gamePadState.digital[1] or Digital1Flags.CELL_PAD_CTRL_SELECT.bit
+            KeyEvent.KEYCODE_BUTTON_THUMBL -> gamePadState.digital[1] = gamePadState.digital[1] or Digital1Flags.CELL_PAD_CTRL_L3.bit
+            KeyEvent.KEYCODE_BUTTON_THUMBR -> gamePadState.digital[1] = gamePadState.digital[1] or Digital1Flags.CELL_PAD_CTRL_R3.bit
         }
         sendGamepadData()
         return super.onKeyDown(keyCode, event)
@@ -86,22 +86,22 @@ class RPCS3Activity : Activity() {
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> gamePadState.digital1 = gamePadState.digital1 and Digital1Flags.CELL_PAD_CTRL_UP.bit.inv()
-            KeyEvent.KEYCODE_DPAD_DOWN -> gamePadState.digital1 = gamePadState.digital1 and Digital1Flags.CELL_PAD_CTRL_DOWN.bit.inv()
-            KeyEvent.KEYCODE_DPAD_LEFT -> gamePadState.digital1 = gamePadState.digital1 and Digital1Flags.CELL_PAD_CTRL_LEFT.bit.inv()
-            KeyEvent.KEYCODE_DPAD_RIGHT -> gamePadState.digital1 = gamePadState.digital1 and Digital1Flags.CELL_PAD_CTRL_RIGHT.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_A -> gamePadState.digital2 = gamePadState.digital2 and Digital2Flags.CELL_PAD_CTRL_CROSS.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_B -> gamePadState.digital2 = gamePadState.digital2 and Digital2Flags.CELL_PAD_CTRL_CIRCLE.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_X -> gamePadState.digital2 = gamePadState.digital2 and Digital2Flags.CELL_PAD_CTRL_SQUARE.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_Y -> gamePadState.digital2 = gamePadState.digital2 and Digital2Flags.CELL_PAD_CTRL_TRIANGLE.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_L1 -> gamePadState.digital2 = gamePadState.digital2 and Digital2Flags.CELL_PAD_CTRL_L1.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_R1 -> gamePadState.digital2 = gamePadState.digital2 and Digital2Flags.CELL_PAD_CTRL_R1.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_L2 -> gamePadState.digital2 = gamePadState.digital2 and Digital2Flags.CELL_PAD_CTRL_L2.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_R2 -> gamePadState.digital2 = gamePadState.digital2 and Digital2Flags.CELL_PAD_CTRL_R2.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_START -> gamePadState.digital1 = gamePadState.digital1 and Digital1Flags.CELL_PAD_CTRL_START.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_SELECT -> gamePadState.digital1 = gamePadState.digital1 and Digital1Flags.CELL_PAD_CTRL_SELECT.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_THUMBL -> gamePadState.digital1 = gamePadState.digital1 and Digital1Flags.CELL_PAD_CTRL_L3.bit.inv()
-            KeyEvent.KEYCODE_BUTTON_THUMBR -> gamePadState.digital1 = gamePadState.digital1 and Digital1Flags.CELL_PAD_CTRL_R3.bit.inv()
+            KeyEvent.KEYCODE_DPAD_UP -> gamePadState.digital[1] = gamePadState.digital[1] and Digital1Flags.CELL_PAD_CTRL_UP.bit.inv()
+            KeyEvent.KEYCODE_DPAD_DOWN -> gamePadState.digital[1] = gamePadState.digital[1] and Digital1Flags.CELL_PAD_CTRL_DOWN.bit.inv()
+            KeyEvent.KEYCODE_DPAD_LEFT -> gamePadState.digital[1] = gamePadState.digital[1] and Digital1Flags.CELL_PAD_CTRL_LEFT.bit.inv()
+            KeyEvent.KEYCODE_DPAD_RIGHT -> gamePadState.digital[1] = gamePadState.digital[1] and Digital1Flags.CELL_PAD_CTRL_RIGHT.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_A -> gamePadState.digital[2] = gamePadState.digital[2] and Digital2Flags.CELL_PAD_CTRL_CROSS.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_B -> gamePadState.digital[2] = gamePadState.digital[2] and Digital2Flags.CELL_PAD_CTRL_CIRCLE.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_X -> gamePadState.digital[2] = gamePadState.digital[2] and Digital2Flags.CELL_PAD_CTRL_SQUARE.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_Y -> gamePadState.digital[2] = gamePadState.digital[2] and Digital2Flags.CELL_PAD_CTRL_TRIANGLE.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_L1 -> gamePadState.digital[2] = gamePadState.digital[2] and Digital2Flags.CELL_PAD_CTRL_L1.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_R1 -> gamePadState.digital[2] = gamePadState.digital[2] and Digital2Flags.CELL_PAD_CTRL_R1.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_L2 -> gamePadState.digital[2] = gamePadState.digital[2] and Digital2Flags.CELL_PAD_CTRL_L2.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_R2 -> gamePadState.digital[2] = gamePadState.digital[2] and Digital2Flags.CELL_PAD_CTRL_R2.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_START -> gamePadState.digital[1] = gamePadState.digital[1] and Digital1Flags.CELL_PAD_CTRL_START.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_SELECT -> gamePadState.digital[1] = gamePadState.digital[1] and Digital1Flags.CELL_PAD_CTRL_SELECT.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_THUMBL -> gamePadState.digital[1] = gamePadState.digital[1] and Digital1Flags.CELL_PAD_CTRL_L3.bit.inv()
+            KeyEvent.KEYCODE_BUTTON_THUMBR -> gamePadState.digital[1] = gamePadState.digital[1] and Digital1Flags.CELL_PAD_CTRL_R3.bit.inv()
         }
         sendGamepadData()
         return super.onKeyUp(keyCode, event)
@@ -119,7 +119,7 @@ class RPCS3Activity : Activity() {
     }
 
     private fun sendGamepadData() {
-        RPCS3.instance.overlayPadData(gamePadState.digital1, gamePadState.digital2, gamePadState.leftStickX, gamePadState.leftStickY, gamePadState.rightStickX, gamePadState.rightStickY)
+        RPCS3.instance.overlayPadData(gamePadState.digital[1], gamePadState.digital[2], gamePadState.leftStickX, gamePadState.leftStickY, gamePadState.rightStickX, gamePadState.rightStickY)
     }
 
     override fun onDestroy() {
