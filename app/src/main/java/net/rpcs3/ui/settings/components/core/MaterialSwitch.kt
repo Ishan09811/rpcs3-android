@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.graphicsLayer
 
 @Composable
 fun MaterialSwitch(
@@ -70,6 +71,11 @@ fun MaterialSwitch(
       else if (enabled) colors.uncheckedBorderColor else colors.disabledUncheckedBorderColor
     }
 
+    val thumbScale by transition.animateFloat(
+        transitionSpec = { tween(200, easing = FastOutSlowInEasing) },
+        label = "thumbScale"
+    ) { if (it) 1.1f else 0.9f }
+
     Box(
         modifier = modifier
             .width(52.dp)
@@ -87,6 +93,10 @@ fun MaterialSwitch(
                 .shadow(4.dp, CircleShape)
                 .clip(CircleShape)
                 .background(thumbColor)
+                .graphicsLayer(
+                    scaleX = thumbScale,
+                    scaleY = thumbScale
+                )
         )
     }
 }
