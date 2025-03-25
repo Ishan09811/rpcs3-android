@@ -127,7 +127,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         val l3 = PadOverlayStick(
             resources,
             true,
-            BitmapFactory.decodeResource(resources, R.drawable.left_stick_background),
+            decodeScaledBitmap(R.drawable.left_stick_background, buttonSize * 2, buttonSize * 2),
             BitmapFactory.decodeResource(resources, R.drawable.l3),
             pressDigitalIndex = 0,
             pressBit = Digital1Flags.CELL_PAD_CTRL_L3.bit
@@ -143,7 +143,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         val r3 = PadOverlayStick(
             resources,
             false,
-            BitmapFactory.decodeResource(resources, R.drawable.right_stick_background),
+            decodeScaledBitmap(R.drawable.right_stick_background, buttonSize * 2, buttonSize * 2),
             BitmapFactory.decodeResource(resources, R.drawable.r3),
             pressDigitalIndex = 0,
             pressBit = Digital1Flags.CELL_PAD_CTRL_R3.bit
@@ -336,7 +336,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         digital2: Digital2Flags
     ): PadOverlayButton {
         val resources = context!!.resources
-        val bitmap = BitmapFactory.decodeResource(resources, resourceId)
+        val bitmap = decodeScaledBitmap(resourceId, width, height)
         val result = PadOverlayButton(resources, bitmap, digital1.bit, digital2.bit)
         result.setBounds(x, y, x + width, y + height)
         result.alpha = idleAlpha
@@ -358,10 +358,10 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         multitouch: Boolean
     ): PadOverlayDpad {
         val resources = context!!.resources
-        val upBitmap = BitmapFactory.decodeResource(resources, upResource)
-        val leftBitmap = BitmapFactory.decodeResource(resources, leftResource)
-        val rightBitmap = BitmapFactory.decodeResource(resources, rightResource)
-        val downBitmap = BitmapFactory.decodeResource(resources, downResource)
+        val upBitmap = decodeScaledBitmap(upResource, buttonWidth, buttonHeight)
+        val leftBitmap = decodeScaledBitmap(leftResource, buttonWidth, buttonHeight)
+        val rightBitmap = decodeScaledBitmap(rightResource, buttonWidth, buttonHeight)
+        val downBitmap = decodeScaledBitmap(downResource, buttonWidth, buttonHeight)
 
         val result = PadOverlayDpad(
             resources, buttonWidth, buttonHeight, Rect(x, y, x + width, y + height), digital,
@@ -374,5 +374,32 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
 
         result.idleAlpha = idleAlpha
         return result
+    }
+
+    private fun decodeScaledBitmap(resId: Int, reqWidth: Int, reqHeight: Int): Bitmap {
+        val resources = context!!.resources
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+            BitmapFactory.decodeResource(resources, resId, this)
+            inSampleSize = calculateInSampleSize(this, reqWidth, reqHeight)
+            inJustDecodeBounds = false
+            inMutable = true
+        }
+        return BitmapFactory.decodeResource(resources, resId, options)
+    }
+
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val (width, height) = options.outWidth to options.outHeight
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight = height / 2
+            val halfWidth = width / 2
+
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+        return inSampleSize
     }
 }
