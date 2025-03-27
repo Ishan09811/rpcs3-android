@@ -440,7 +440,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         val downBitmap = BitmapFactory.decodeResource(resources, downResource)
 
         val result = PadOverlayDpad(
-            resources, buttonWidth, buttonHeight, Rect(x, y, x + width, y + height), digital,
+            context, resources, buttonWidth, buttonHeight, Rect(x, y, x + width, y + height), digital,
             upBitmap, upBit,
             leftBitmap, leftBit,
             rightBitmap, rightBit,
