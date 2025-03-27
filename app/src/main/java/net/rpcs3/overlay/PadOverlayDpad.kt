@@ -29,6 +29,7 @@ private class DpadState(var mask: Int = 0) {
 }
 
 class PadOverlayDpad(
+    private val context: Context,
     resources: Resources,
     buttonWidth: Int,
     buttonHeight: Int,
@@ -51,10 +52,13 @@ class PadOverlayDpad(
     private val locked = arrayOf(-1, -1)
     private val btnState = arrayOf(DpadState(), DpadState())
     private val digitalBits = arrayOf(0, 0)
+    private val prefs: SharedPreferences by lazy { context.getSharedPreferences("PadOverlayPrefs", Context.MODE_PRIVATE) }
     var idleAlpha: Int = 255
     var dragging: Boolean = false
 
     init {
+        loadSavedPosition()
+        
         drawableTop.setBounds(
             area.centerX() - buttonWidth / 2,
             area.top,
@@ -87,32 +91,62 @@ class PadOverlayDpad(
     fun contains(x: Int, y: Int) = area.contains(x, y)
 
     fun startDragging(x: Int, y: Int) {
-        // TODO: Implement me
+        dragging = true
     }
 
     fun updatePosition(x: Int, y: Int, force: Boolean = false) {
-        // TODO: implement me
+        if (!dragging && !force) return
+
+        val newLeft = x - area.width() / 2
+        val newTop = y - area.height() / 2
+        val newRight = newLeft + area.width()
+        val newBottom = newTop + area.height()
+
+        area.set(newLeft, newTop, newRight, newBottom)
+        prefs.edit()
+            .putInt("dpad_x", area.left)
+            .putInt("dpad_y", area.top)
+            .apply()
     }
 
     fun stopDragging() {
-        // TODO: implement me
+        dragging = false
     }
 
     fun setScale(percent: Int) {
-        // TODO: implement me
+        val scaleFactor = percent / 100f
+        val width = (area.width() * scaleFactor).roundToInt()
+        val height = (area.height() * scaleFactor).roundToInt()
+        val centerX = area.centerX()
+        val centerY = area.centerY()
+
+        area.set(centerX - width / 2, centerY - height / 2, centerX + width / 2, centerY + height / 2)
+        prefs.edit()
+            .putInt("dpad_x", area.left)
+            .putInt("dpad_y", area.top)
+            .apply()
     }
 
     fun setOpacity(percent: Int) {
-        // TODO: implement me
+        idleAlpha = (255 * percent / 100).coerceIn(0, 255)
+        prefs.edit().putInt("dpad_opacity", idleAlpha).apply()
+    }
+
+    fun resetConfigs() {
+        prefs.edit().clear().apply()
+        area.set(100, 100, 250, 250)
+        idleAlpha = 255
+    }
+
+    private fun loadSavedPosition() {
+        val x = prefs.getInt("dpad_x", area.left)
+        val y = prefs.getInt("dpad_y", area.top)
+        updatePosition(x, y, force = true)
     }
 
     /*fun measureDefaultScale(): Int {
         // TODO: implement me
     }*/
-
-    fun resetConfigs() {
-        // TODO: implement me
-    }
 
     fun getInfo(): Triple<String, Int, Int> {
         return Triple("Dpad", 50, 50)
