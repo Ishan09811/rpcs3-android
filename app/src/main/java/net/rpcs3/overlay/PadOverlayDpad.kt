@@ -266,7 +266,7 @@ class PadOverlayDpad(
     }
     
     fun getBounds(): Bounds {
-        return if (inputId == "dpad") Bounds(area, null, null, null) else Bounds(drawableTop.bounds, drawableBottom.bounds, drawableRight.bounds, drawableLeft.bounds)
+        return area
     }
     
     fun draw(canvas: Canvas) {
@@ -287,5 +287,3 @@ class PadOverlayDpad(
         drawableTop.draw(canvas)
     }
 }
-
-data class Bounds(val first: Rect, val second: Rect?, val third: Rect?, val fourth: Rect?)
