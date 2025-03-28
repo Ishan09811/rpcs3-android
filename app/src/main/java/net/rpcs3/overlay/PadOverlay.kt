@@ -90,7 +90,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         val btnR1Y = btnR2Y + buttonSize + buttonSize / 2
 
         dpad = createDpad(
-            dpadAreaX, dpadAreaY, dpadW, dpadH,
+            "dpad", dpadAreaX, dpadAreaY, dpadW, dpadH,
             dpadW / 2,
             dpadH / 2 - dpadH / 20,
             0,
@@ -106,7 +106,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         )
 
         triangleSquareCircleCross = createDpad(
-            btnAreaX - buttonSize / 2, btnAreaY, buttonSize * 3, buttonSize * 3,
+            "triangleSquareCircleCross", btnAreaX - buttonSize / 2, btnAreaY, buttonSize * 3, buttonSize * 3,
             buttonSize,
             buttonSize,
             1,
@@ -420,6 +420,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
     }
 
     private fun createDpad(
+        inputId: String,
         x: Int,
         y: Int,
         width: Int,
@@ -440,7 +441,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         val downBitmap = BitmapFactory.decodeResource(resources, downResource)
 
         val result = PadOverlayDpad(
-            context, resources, buttonWidth, buttonHeight, Rect(x, y, x + width, y + height), digital,
+            context, resources, buttonWidth, buttonHeight, inputId, Rect(x, y, x + width, y + height), digital,
             upBitmap, upBit,
             leftBitmap, leftBit,
             rightBitmap, rightBit,
