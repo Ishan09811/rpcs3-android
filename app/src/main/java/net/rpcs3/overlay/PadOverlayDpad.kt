@@ -103,6 +103,35 @@ class PadOverlayDpad(
         val newBottom = newTop + area.height()
 
         area.set(newLeft, newTop, newRight, newBottom)
+        
+        drawableTop.setBounds(
+            area.centerX() - drawableTop.bounds.width() / 2,
+            area.top,
+            area.centerX() + drawableTop.bounds.width() / 2,
+            area.top + drawableTop.bounds.height()
+        )
+
+        drawableBottom.setBounds(
+            area.centerX() - drawableBottom.bounds.width() / 2,
+            area.bottom - drawableBottom.bounds.height(),
+            area.centerX() + drawableBottom.bounds.width() / 2,
+            area.bottom
+        )
+
+        drawableLeft.setBounds(
+            area.left,
+            area.centerY() - drawableLeft.bounds.height() / 2,
+            area.left + drawableLeft.bounds.width(),
+            area.centerY() + drawableLeft.bounds.height() / 2
+        )
+
+        drawableRight.setBounds(
+            area.right - drawableRight.bounds.width(),
+            area.centerY() - drawableRight.bounds.height() / 2,
+            area.right,
+            area.centerY() + drawableRight.bounds.height() / 2
+        )
+        
         prefs.edit()
             .putInt("dpad_x", area.left)
             .putInt("dpad_y", area.top)
