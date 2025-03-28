@@ -148,8 +148,8 @@ class PadOverlayDpad(
 
     fun setScale(percent: Int) {
         val scaleFactor = percent / 100f
-        val newWidth = (area.width() * scaleFactor).roundToInt()
-        val newHeight = (area.height() * scaleFactor).roundToInt()
+        val newWidth = (1024 * scaleFactor).roundToInt()
+        val newHeight = (1024 * scaleFactor).roundToInt()
         val centerX = area.centerX()
         val centerY = area.centerY()
 
