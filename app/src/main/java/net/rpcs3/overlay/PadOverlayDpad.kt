@@ -154,9 +154,39 @@ class PadOverlayDpad(
         val centerY = area.centerY()
 
         area.set(centerX - width / 2, centerY - height / 2, centerX + width / 2, centerY + height / 2)
+
+        drawableTop.setBounds(
+            area.centerX() - drawableTop.bounds.width() / 2,
+            area.top,
+            area.centerX() + drawableTop.bounds.width() / 2,
+            area.top + drawableTop.bounds.height()
+        )
+
+        drawableBottom.setBounds(
+            area.centerX() - drawableBottom.bounds.width() / 2,
+            area.bottom - drawableBottom.bounds.height(),
+            area.centerX() + drawableBottom.bounds.width() / 2,
+            area.bottom
+        )
+
+        drawableLeft.setBounds(
+            area.left,
+            area.centerY() - drawableLeft.bounds.height() / 2,
+            area.left + drawableLeft.bounds.width(),
+            area.centerY() + drawableLeft.bounds.height() / 2
+        )
+
+        drawableRight.setBounds(
+            area.right - drawableRight.bounds.width(),
+            area.centerY() - drawableRight.bounds.height() / 2,
+            area.right,
+            area.centerY() + drawableRight.bounds.height() / 2
+        )
+        
         prefs.edit()
             .putInt("dpad_x", area.left)
             .putInt("dpad_y", area.top)
+            .putInt("dpad_scale", percent)
             .apply()
     }
 
@@ -168,13 +198,15 @@ class PadOverlayDpad(
     fun resetConfigs() {
         prefs.edit().clear().apply()
         area.set(100, 100, 250, 250)
-        idleAlpha = 255
+        setOpacity(50)
     }
 
     private fun loadSavedPosition() {
         val x = prefs.getInt("dpad_x", area.left)
         val y = prefs.getInt("dpad_y", area.top)
+        val scale = prefs.getInt("dpad_scale", 50)
         updatePosition(x, y, force = true)
+        setScale(scale)
     }
 
     /*fun measureDefaultScale(): Int {
@@ -182,7 +214,7 @@ class PadOverlayDpad(
     }*/
 
     fun getInfo(): Triple<String, Int, Int> {
-        return Triple("Dpad", 50, 50)
+        return Triple("Dpad", prefs.getInt("dpad_scale", 50), 50)
     }
 
     fun onTouch(event: MotionEvent, pointerIndex: Int, padState: State): Boolean {
