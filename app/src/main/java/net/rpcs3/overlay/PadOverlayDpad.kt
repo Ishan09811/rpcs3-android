@@ -148,41 +148,44 @@ class PadOverlayDpad(
 
     fun setScale(percent: Int) {
         val scaleFactor = percent / 100f
-        val width = (area.width() * scaleFactor).roundToInt()
-        val height = (area.height() * scaleFactor).roundToInt()
+        val newWidth = (area.width() * scaleFactor).roundToInt()
+        val newHeight = (area.height() * scaleFactor).roundToInt()
         val centerX = area.centerX()
         val centerY = area.centerY()
 
-        area.set(centerX - width / 2, centerY - height / 2, centerX + width / 2, centerY + height / 2)
+        area.set(centerX - newWidth / 2, centerY - newHeight / 2, centerX + newWidth / 2, centerY + newHeight / 2)
+
+        val buttonWidth = (newWidth / 3.5).roundToInt()
+        val buttonHeight = (newHeight / 3.5).roundToInt()
 
         drawableTop.setBounds(
-            area.centerX() - drawableTop.bounds.width() / 2,
+            area.centerX() - buttonWidth / 2,
             area.top,
-            area.centerX() + drawableTop.bounds.width() / 2,
-            area.top + drawableTop.bounds.height()
+            area.centerX() + buttonWidth / 2,
+            area.top + buttonHeight
         )
 
         drawableBottom.setBounds(
-            area.centerX() - drawableBottom.bounds.width() / 2,
-            area.bottom - drawableBottom.bounds.height(),
-            area.centerX() + drawableBottom.bounds.width() / 2,
+            area.centerX() - buttonWidth / 2,
+            area.bottom - buttonHeight,
+            area.centerX() + buttonWidth / 2,
             area.bottom
         )
 
         drawableLeft.setBounds(
             area.left,
-            area.centerY() - drawableLeft.bounds.height() / 2,
-            area.left + drawableLeft.bounds.width(),
-            area.centerY() + drawableLeft.bounds.height() / 2
+            area.centerY() - buttonHeight / 2,
+            area.left + buttonWidth,
+            area.centerY() + buttonHeight / 2
         )
 
         drawableRight.setBounds(
-            area.right - drawableRight.bounds.width(),
-            area.centerY() - drawableRight.bounds.height() / 2,
+            area.right - buttonWidth,
+            area.centerY() - buttonHeight / 2,
             area.right,
-            area.centerY() + drawableRight.bounds.height() / 2
+            area.centerY() + buttonHeight / 2
         )
-        
+
         prefs.edit()
             .putInt("dpad_x", area.left)
             .putInt("dpad_y", area.top)
