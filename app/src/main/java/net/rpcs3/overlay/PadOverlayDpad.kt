@@ -53,6 +53,8 @@ class PadOverlayDpad(
     private val btnState = arrayOf(DpadState(), DpadState())
     private val digitalBits = arrayOf(0, 0)
     private val prefs: SharedPreferences by lazy { context.getSharedPreferences("PadOverlayPrefs", Context.MODE_PRIVATE) }
+    private var offsetX = 0
+    private var offsetY = 0
     var idleAlpha: Int = 255
     var dragging: Boolean = false
 
@@ -92,13 +94,15 @@ class PadOverlayDpad(
 
     fun startDragging(x: Int, y: Int) {
         dragging = true
+        offsetX = x - area.left
+        offsetY = y - area.top
     }
 
     fun updatePosition(x: Int, y: Int, force: Boolean = false) {
         if (!dragging && !force) return
 
-        val newLeft = x - area.width() / 2
-        val newTop = y - area.height() / 2
+        val newLeft = x - offsetX
+        val newTop = y - offsetY
         val newRight = newLeft + area.width()
         val newBottom = newTop + area.height()
 
