@@ -31,8 +31,8 @@ private class DpadState(var mask: Int = 0) {
 class PadOverlayDpad(
     private val context: Context,
     resources: Resources,
-    private val buttonWidth: Int,
-    private val buttonHeight: Int,
+    private var buttonWidth: Int,
+    private var buttonHeight: Int,
     private val inputId: String,
     private val area: Rect,
     private val digitalIndex: Int,
