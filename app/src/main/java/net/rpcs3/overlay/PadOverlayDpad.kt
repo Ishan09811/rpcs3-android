@@ -33,6 +33,7 @@ class PadOverlayDpad(
     resources: Resources,
     private val buttonWidth: Int,
     private val buttonHeight: Int,
+    private val inputId: String,
     private val area: Rect,
     private val digitalIndex: Int,
     imgTop: Bitmap,
@@ -82,8 +83,8 @@ class PadOverlayDpad(
         updateBounds()
         
         prefs.edit()
-            .putInt("dpad_x", area.left)
-            .putInt("dpad_y", area.top)
+            .putInt("${inputId}_x", area.left)
+            .putInt("${inputId}_y", area.top)
             .apply()
     }
 
@@ -99,18 +100,20 @@ class PadOverlayDpad(
         val centerY = area.centerY()
 
         area.set(centerX - newWidth / 2, centerY - newHeight / 2, centerX + newWidth / 2, centerY + newHeight / 2)
+        buttonWidth = newWidth / 2
+        buttonHeight = newHeight / 2 - newHeight / 20
         updateBounds()
 
         prefs.edit()
-            .putInt("${topBit.toString()}_x", area.left)
-            .putInt("${topBit.toString()}_y", area.top)
-            .putInt("${topBit.toString()}_scale", percent)
+            .putInt("${inputId}_x", area.left)
+            .putInt("${inputId}_y", area.top)
+            .putInt("${inputId}_scale", percent)
             .apply()
     }
 
     fun setOpacity(percent: Int) {
         idleAlpha = (255 * percent / 100).coerceIn(0, 255)
-        prefs.edit().putInt("dpad_opacity", idleAlpha).apply()
+        prefs.edit().putInt("${inputId}_opacity", idleAlpha).apply()
     }
 
     fun resetConfigs() {
@@ -120,9 +123,9 @@ class PadOverlayDpad(
     }
 
     private fun loadSavedPosition() {
-        val x = prefs.getInt("${topBit.toString()}_x", area.left)
-        val y = prefs.getInt("${topBit.toString()}_y", area.top)
-        val scale = prefs.getInt("${topBit.toString()}_scale", 50)
+        val x = prefs.getInt("${inputId}_x", area.left)
+        val y = prefs.getInt("${inputId}_y", area.top)
+        val scale = prefs.getInt("${inputId}_scale", 50)
         updatePosition(x, y, force = true)
         setScale(scale)
     }
@@ -132,7 +135,7 @@ class PadOverlayDpad(
     }*/
 
     fun getInfo(): Triple<String, Int, Int> {
-        return Triple("Dpad", prefs.getInt("${topBit.toString()}_scale", 50), 50)
+        return Triple("Dpad", prefs.getInt("${inputId}_scale", 50), 50)
     }
 
     private fun updateBounds() {
