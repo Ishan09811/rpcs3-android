@@ -155,35 +155,32 @@ class PadOverlayDpad(
 
         area.set(centerX - newWidth / 2, centerY - newHeight / 2, centerX + newWidth / 2, centerY + newHeight / 2)
 
-        val buttonWidth = (newWidth / 3.5).roundToInt()
-        val buttonHeight = (newHeight / 3.5).roundToInt()
-
         drawableTop.setBounds(
-            area.centerX() - buttonWidth / 2,
+            area.centerX() - newWidth / 2,
             area.top,
-            area.centerX() + buttonWidth / 2,
-            area.top + buttonHeight
+            area.centerX() + newWidth / 2,
+            area.top + newHeight
         )
 
         drawableBottom.setBounds(
-            area.centerX() - buttonWidth / 2,
-            area.bottom - buttonHeight,
-            area.centerX() + buttonWidth / 2,
+            area.centerX() - newWidth / 2,
+            area.bottom - newHeight,
+            area.centerX() + newWidth / 2,
             area.bottom
         )
 
         drawableLeft.setBounds(
             area.left,
-            area.centerY() - buttonHeight / 2,
-            area.left + buttonWidth,
-            area.centerY() + buttonHeight / 2
+            area.centerY() - newHeight / 2,
+            area.left + newWidth,
+            area.centerY() + newHeight / 2
         )
 
         drawableRight.setBounds(
-            area.right - buttonWidth,
-            area.centerY() - buttonHeight / 2,
+            area.right - newWidth,
+            area.centerY() - newHeight / 2,
             area.right,
-            area.centerY() + buttonHeight / 2
+            area.centerY() + newHeight / 2
         )
 
         prefs.edit()
