@@ -55,6 +55,7 @@ class PadOverlayDpad(
     private val btnState = arrayOf(DpadState(), DpadState())
     private val digitalBits = arrayOf(0, 0)
     private val prefs: SharedPreferences by lazy { context.getSharedPreferences("PadOverlayPrefs", Context.MODE_PRIVATE) }
+    private var selectedButton: Drawable? = null
     private var offsetX = 0
     private var offsetY = 0
     var idleAlpha: Int = 255
@@ -64,10 +65,26 @@ class PadOverlayDpad(
         loadSavedPosition()
     }
 
-    fun contains(x: Int, y: Int) = area.contains(x, y)
+    fun contains(x: Int, y: Int): Boolean {
+        if (inputId == "triangleSquareCircleCross") {
+            if (drawableTop.bounds.contains(x, y)) selectedButton = drawableTop
+            if (drawableLeft.bounds.contains(x, y)) selectedButton = drawableLeft
+            if (drawableRight.bounds.contains(x, y)) selectedButton = drawableRight
+            if (drawableBottom.bounds.contains(x, y)) selectedButton = drawableBottom
+        }
+        return area.contains(x, y)
+    }
 
     fun startDragging(x: Int, y: Int) {
         dragging = true
+
+        if (inputId == "triangleSquareCircleCross" && selectedButton != null) {
+            val bounds = selectedButton.bounds
+            offsetX = x - bounds.left
+            offsetY = y - bounds.top
+            return
+        }
+        
         offsetX = x - area.left
         offsetY = y - area.top
     }
@@ -77,6 +94,16 @@ class PadOverlayDpad(
 
         val newLeft = x - offsetX
         val newTop = y - offsetY
+
+        if (inputId == "triangleSquareCircleCross" && selectedButton != null) {
+            val bounds = selectedButton.bounds
+            val newRight = newLeft + bounds.width()
+            val newBottom = newTop + bounds.height()
+            selectedButton.setBounds(newLeft, newTop, newRight, newBottom)
+            area.set(drawableLeft.bounds.left, drawableTop.bounds.top, drawableRight.bounds.right, drawableBottom.bounds.bottom)
+            return 
+        }
+        
         val newRight = newLeft + area.width()
         val newBottom = newTop + area.height()
 
@@ -99,6 +126,13 @@ class PadOverlayDpad(
         val newHeight = (1024 * scaleFactor).roundToInt()
         val centerX = area.centerX()
         val centerY = area.centerY()
+
+        if (inputId == "triangleSquareCircleCross" && selectedButton != null) {
+            val bounds = selectedButton.bounds
+            selectedButton.setBounds(bounds.left, bounds.top, bounds.left + newWidth, bounds.top + newHeight)
+            area.set(drawableLeft.bounds.left, drawableTop.bounds.top, drawableRight.bounds.right, drawableBottom.bounds.bottom)
+            return 
+        }
 
         area.set(centerX - newWidth / 2, centerY - newHeight / 2, centerX + newWidth / 2, centerY + newHeight / 2)
         buttonWidth = newWidth / 2
@@ -124,11 +158,12 @@ class PadOverlayDpad(
     }
 
     private fun loadSavedPosition() {
-        val x = prefs.getInt("${inputId}_x", area.left)
-        val y = prefs.getInt("${inputId}_y", area.top)
-        val scale = prefs.getInt("${inputId}_scale", 50)
-        updatePosition(x, y, force = true)
-        setScale(scale)
+        val x = prefs.getInt("${inputId}_x", -1)
+        val y = prefs.getInt("${inputId}_y", -1)
+        val scale = prefs.getInt("${inputId}_scale", -1)
+        if (x != -1 && y != -1) updatePosition(x, y, force = true)
+        if (scale != -1) setScale(scale)
+        updateBounds() // incase setScale and updatePosition both not applied     
     }
 
     /*fun measureDefaultScale(): Int {
@@ -267,7 +302,7 @@ class PadOverlayDpad(
     }
     
     fun getBounds(): Rect {
-        return area
+        return if (selectedButton != null) selectedButton.bounds else area
     }
     
     fun draw(canvas: Canvas) {
