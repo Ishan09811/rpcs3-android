@@ -55,10 +55,7 @@ class PadOverlayDpad(
     private val btnState = arrayOf(DpadState(), DpadState())
     private val digitalBits = arrayOf(0, 0)
     private val prefs: SharedPreferences by lazy { context.getSharedPreferences("PadOverlayPrefs", Context.MODE_PRIVATE) }
-    
-    @Volatile
     private var selectedButton: Drawable? = null
-    
     private var offsetX = 0
     private var offsetY = 0
     var idleAlpha: Int = 255
@@ -82,7 +79,8 @@ class PadOverlayDpad(
         dragging = true
 
         if (inputId == "triangleSquareCircleCross" && selectedButton != null) {
-            val bounds = selectedButton.bounds
+            val selected = selectedButton ?: return
+            val bounds = selected.bounds
             offsetX = x - bounds.left
             offsetY = y - bounds.top
             return
@@ -99,10 +97,11 @@ class PadOverlayDpad(
         val newTop = y - offsetY
 
         if (inputId == "triangleSquareCircleCross" && selectedButton != null) {
-            val bounds = selectedButton.bounds
+            val selected = selectedButton ?: return
+            val bounds = selected.bounds
             val newRight = newLeft + bounds.width()
             val newBottom = newTop + bounds.height()
-            selectedButton.setBounds(newLeft, newTop, newRight, newBottom)
+            selected.setBounds(newLeft, newTop, newRight, newBottom)
             area.set(drawableLeft.bounds.left, drawableTop.bounds.top, drawableRight.bounds.right, drawableBottom.bounds.bottom)
             return 
         }
@@ -131,8 +130,9 @@ class PadOverlayDpad(
         val centerY = area.centerY()
 
         if (inputId == "triangleSquareCircleCross" && selectedButton != null) {
-            val bounds = selectedButton.bounds
-            selectedButton.setBounds(bounds.left, bounds.top, bounds.left + newWidth, bounds.top + newHeight)
+            val selected = selectedButton ?: return
+            val bounds = selected.bounds
+            selected.setBounds(bounds.left, bounds.top, bounds.left + newWidth, bounds.top + newHeight)
             area.set(drawableLeft.bounds.left, drawableTop.bounds.top, drawableRight.bounds.right, drawableBottom.bounds.bottom)
             return 
         }
@@ -305,7 +305,11 @@ class PadOverlayDpad(
     }
     
     fun getBounds(): Rect {
-        return if (selectedButton != null) selectedButton.bounds else area
+        if (selectedButton != null){
+            val selected = selectedButton ?: return
+            return selected.bounds
+        }
+        return area
     }
     
     fun draw(canvas: Canvas) {
