@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
+import androidx.appcompat.content.res.AppCompatResources
 import net.rpcs3.Digital1Flags
 import net.rpcs3.Digital2Flags
 import net.rpcs3.R
@@ -435,17 +436,17 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         multitouch: Boolean
     ): PadOverlayDpad {
         val resources = context!!.resources
-        val upBitmap = BitmapFactory.decodeResource(resources, upResource)
-        val leftBitmap = BitmapFactory.decodeResource(resources, leftResource)
-        val rightBitmap = BitmapFactory.decodeResource(resources, rightResource)
-        val downBitmap = BitmapFactory.decodeResource(resources, downResource)
+        val upDrawable = AppCompatResources.getDrawable(context, upResource)
+        val leftDrawable = AppCompatResources.getDrawable(context, leftResource)
+        val rightDrawable = AppCompatResources.getDrawable(context, rightResource)
+        val downDrawable = AppCompatResources.getDrawable(context, downResource)
 
         val result = PadOverlayDpad(
             context, resources, buttonWidth, buttonHeight, inputId, Rect(x, y, x + width, y + height), digital,
-            upBitmap, upBit,
-            leftBitmap, leftBit,
-            rightBitmap, rightBit,
-            downBitmap, downBit,
+            upDrawable, upBit,
+            leftDrawable, leftBit,
+            rightDrawable, rightBit,
+            downDrawable, downBit,
             multitouch
         )
 
