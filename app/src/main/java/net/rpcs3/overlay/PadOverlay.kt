@@ -30,7 +30,7 @@ data class State(
 class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context, attrs) {
     private val buttons: Array<PadOverlayButton>
     private val dpad: PadOverlayDpad
-    private val triangleSquareCircleCross: PadOverlayDpad
+    private lateinit val triangleSquareCircleCross: PadOverlayDpad
     private val state = State()
     private val leftStick: PadOverlayStick
     private val rightStick: PadOverlayStick
