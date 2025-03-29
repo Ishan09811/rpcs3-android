@@ -55,7 +55,10 @@ class PadOverlayDpad(
     private val btnState = arrayOf(DpadState(), DpadState())
     private val digitalBits = arrayOf(0, 0)
     private val prefs: SharedPreferences by lazy { context.getSharedPreferences("PadOverlayPrefs", Context.MODE_PRIVATE) }
+    
+    @Volatile
     private var selectedButton: Drawable? = null
+    
     private var offsetX = 0
     private var offsetY = 0
     var idleAlpha: Int = 255
