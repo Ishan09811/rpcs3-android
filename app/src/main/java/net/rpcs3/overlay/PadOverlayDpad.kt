@@ -55,7 +55,7 @@ class PadOverlayDpad(
     private val btnState = arrayOf(DpadState(), DpadState())
     private val digitalBits = arrayOf(0, 0)
     private val prefs: SharedPreferences by lazy { context.getSharedPreferences("PadOverlayPrefs", Context.MODE_PRIVATE) }
-    private var selectedButton: Drawable? = null
+    private var selectedButton: Pair<Drawable?, String> = Pair(null, "")
     private var offsetX = 0
     private var offsetY = 0
     var idleAlpha: Int = 255
@@ -67,10 +67,10 @@ class PadOverlayDpad(
 
     fun contains(x: Int, y: Int): Boolean {
         if (inputId == "triangleSquareCircleCross") {
-            if (drawableTop.bounds.contains(x, y)) selectedButton = drawableTop
-            if (drawableLeft.bounds.contains(x, y)) selectedButton = drawableLeft
-            if (drawableRight.bounds.contains(x, y)) selectedButton = drawableRight
-            if (drawableBottom.bounds.contains(x, y)) selectedButton = drawableBottom
+            if (drawableTop.bounds.contains(x, y)) selectedButton = Pair(drawableTop, "drawableTop")
+            if (drawableLeft.bounds.contains(x, y)) selectedButton = Pair(drawableLeft, "drawableLeft")
+            if (drawableRight.bounds.contains(x, y)) selectedButton = Pair(drawableRight, "drawableRight")
+            if (drawableBottom.bounds.contains(x, y)) selectedButton = Pair(drawableBottom, "drawableBottom")
         }
         return area.contains(x, y)
     }
@@ -79,7 +79,7 @@ class PadOverlayDpad(
         dragging = true
 
         if (inputId == "triangleSquareCircleCross" && selectedButton != null) {
-            val selected = selectedButton ?: return
+            val selected = selectedButton.first ?: return
             val bounds = selected.bounds
             offsetX = x - bounds.left
             offsetY = y - bounds.top
@@ -97,7 +97,7 @@ class PadOverlayDpad(
         val newTop = y - offsetY
 
         if (inputId == "triangleSquareCircleCross" && selectedButton != null) {
-            val selected = selectedButton ?: return
+            val selected = selectedButton.first ?: return
             val bounds = selected.bounds
             val newRight = newLeft + bounds.width()
             val newBottom = newTop + bounds.height()
@@ -130,12 +130,15 @@ class PadOverlayDpad(
         val centerY = area.centerY()
 
         if (inputId == "triangleSquareCircleCross" && selectedButton != null) {
-            val selected = selectedButton ?: return
+            val selected = selectedButton.first ?: return
             val bounds = selected.bounds
             selected.setBounds(bounds.left, bounds.top, bounds.left + newWidth, bounds.top + newHeight)
             area.set(drawableLeft.bounds.left, drawableTop.bounds.top, drawableRight.bounds.right, drawableBottom.bounds.bottom)
+            prefs.edit()
+                .putInt("${inputId}_${selectedButton.second}_scale", percent)
+                .apply()
             return 
-        }
+        }        
 
         area.set(centerX - newWidth / 2, centerY - newHeight / 2, centerX + newWidth / 2, centerY + newHeight / 2)
         buttonWidth = newWidth / 2
@@ -166,7 +169,29 @@ class PadOverlayDpad(
         val scale = prefs.getInt("${inputId}_scale", -1)
         if (x != -1 && y != -1) updatePosition(x, y, force = true)
         if (scale != -1) setScale(scale)
-        updateBounds() // incase setScale and updatePosition both not applied     
+        updateBounds() // incase setScale and updatePosition both not applied   
+        if (inputId == "triangleSquareCircleCross") {
+            val savedLists = listOf("drawableTop", "drawableRight", "drawableLeft", "drawableBottom")
+            savedLists.forEach {
+                val XY = Pair(prefs.getInt("${inputId}_$it_x", -1), prefs.getInt("${inputId}_$it_y", -1))
+                val scale = prefs.getInt("${inputId}_$it_scale", -1)
+                val button = when (it) {
+                    "drawableTop" -> drawableTop
+                    "drawableRight" -> drawableRight
+                    "drawableLeft" -> drawableLeft
+                    "drawableBottom" -> drawableBottom
+                    else -> null
+                }
+                if (XY.first != -1 && XY.second != -1) {
+                    selectedButton = Pair(button, it)
+                    updatePosition(XY.first, XY.second, force = true)
+                }
+                if (scale != -1) {
+                    selectedButton = Pair(button, it)
+                    setScale(scale)
+                }
+            }
+        }
     }
 
     /*fun measureDefaultScale(): Int {
