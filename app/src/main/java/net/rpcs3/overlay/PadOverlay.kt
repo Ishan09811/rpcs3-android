@@ -436,10 +436,10 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         multitouch: Boolean
     ): PadOverlayDpad {
         val resources = context!!.resources
-        val upDrawable = AppCompatResources.getDrawable(context, upResource)
-        val leftDrawable = AppCompatResources.getDrawable(context, leftResource)
-        val rightDrawable = AppCompatResources.getDrawable(context, rightResource)
-        val downDrawable = AppCompatResources.getDrawable(context, downResource)
+        val upDrawable = AppCompatResources.getDrawable(context, upResource)!!
+        val leftDrawable = AppCompatResources.getDrawable(context, leftResource)!!
+        val rightDrawable = AppCompatResources.getDrawable(context, rightResource)!!
+        val downDrawable = AppCompatResources.getDrawable(context, downResource)!!
 
         val result = PadOverlayDpad(
             context, resources, buttonWidth, buttonHeight, inputId, Rect(x, y, x + width, y + height), digital,
