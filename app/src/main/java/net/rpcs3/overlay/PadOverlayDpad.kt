@@ -266,7 +266,7 @@ class PadOverlayDpad(
         )
     }
     
-    fun getBounds(): Bounds {
+    fun getBounds(): Rect {
         return area
     }
     
