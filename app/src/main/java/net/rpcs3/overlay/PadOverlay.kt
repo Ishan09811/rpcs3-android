@@ -106,7 +106,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
             false
         )
 
-        triangleSquareCircleCross = createDpad(
+        /*triangleSquareCircleCross = createDpad(
             "triangleSquareCircleCross", btnAreaX - buttonSize / 2, btnAreaY, buttonSize * 3, buttonSize * 3,
             buttonSize,
             buttonSize,
@@ -120,7 +120,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
             R.drawable.cross,
             Digital2Flags.CELL_PAD_CTRL_CROSS.bit,
             true
-        )
+        )*/
 
         leftStick = PadOverlayStick(
             resources,
