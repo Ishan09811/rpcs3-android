@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.view.MotionEvent
 import androidx.core.graphics.drawable.toDrawable
 import kotlin.math.roundToInt
@@ -36,20 +37,20 @@ class PadOverlayDpad(
     private val inputId: String,
     private val area: Rect,
     private val digitalIndex: Int,
-    imgTop: Bitmap,
+    imgTop: Drawable,
     private val topBit: Int,
-    imgLeft: Bitmap,
+    imgLeft: Drawable,
     private val leftBit: Int,
-    imgRight: Bitmap,
+    imgRight: Drawable,
     private val rightBit: Int,
-    imgBottom: Bitmap,
+    imgBottom: Drawable,
     private val bottomBit: Int,
     private val multitouch: Boolean
 ) {
-    private val drawableTop = imgTop.toDrawable(resources)
-    private val drawableLeft = imgLeft.toDrawable(resources)
-    private val drawableRight = imgRight.toDrawable(resources)
-    private val drawableBottom = imgBottom.toDrawable(resources)
+    private val drawableTop = imgTop
+    private val drawableLeft = imgLeft
+    private val drawableRight = imgRight
+    private val drawableBottom = imgBottom
     private val locked = arrayOf(-1, -1)
     private val btnState = arrayOf(DpadState(), DpadState())
     private val digitalBits = arrayOf(0, 0)
