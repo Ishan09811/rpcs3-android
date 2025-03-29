@@ -142,7 +142,11 @@ class PadOverlayDpad(
             val selected = selectedButton.first ?: return
             val bounds = selected.bounds
             selected.setBounds(bounds.left, bounds.top, bounds.left + newWidth, bounds.top + newHeight)
-            area.set(drawableLeft.bounds.left, drawableTop.bounds.top, drawableRight.bounds.right, drawableBottom.bounds.bottom)
+            val minLeft = listOf(drawableLeft, drawableRight, drawableTop, drawableBottom).minOf { it.bounds.left }
+            val maxRight = listOf(drawableLeft, drawableRight, drawableTop, drawableBottom).maxOf { it.bounds.right }
+            val minTop = listOf(drawableLeft, drawableRight, drawableTop, drawableBottom).minOf { it.bounds.top }
+            val maxBottom = listOf(drawableLeft, drawableRight, drawableTop, drawableBottom).maxOf { it.bounds.bottom }
+            area.set(minLeft, minTop, maxRight, maxBottom)
             prefs.edit()
                 .putInt("${inputId}_${selectedButton.second}_scale", percent)
                 .apply()
