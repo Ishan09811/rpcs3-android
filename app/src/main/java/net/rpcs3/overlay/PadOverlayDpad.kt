@@ -173,8 +173,8 @@ class PadOverlayDpad(
         if (inputId == "triangleSquareCircleCross") {
             val savedLists = listOf("drawableTop", "drawableRight", "drawableLeft", "drawableBottom")
             savedLists.forEach {
-                val XY = Pair(prefs.getInt("${inputId}_$it_x", -1), prefs.getInt("${inputId}_$it_y", -1))
-                val scale = prefs.getInt("${inputId}_$it_scale", -1)
+                val XY = Pair(prefs.getInt("${inputId}_${it}_x", -1), prefs.getInt("${inputId}_${it}_y", -1))
+                val scale = prefs.getInt("${inputId}_${it}_scale", -1)
                 val button = when (it) {
                     "drawableTop" -> drawableTop
                     "drawableRight" -> drawableRight
