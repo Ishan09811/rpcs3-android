@@ -103,6 +103,10 @@ class PadOverlayDpad(
             val newBottom = newTop + bounds.height()
             selected.setBounds(newLeft, newTop, newRight, newBottom)
             area.set(drawableLeft.bounds.left, drawableTop.bounds.top, drawableRight.bounds.right, drawableBottom.bounds.bottom)
+            prefs.edit()
+                .putInt("${inputId}_${selectedButton.second}_x", x)
+                .putInt("${inputId}_${selectedButton.second}_y", y)
+                .apply()
             return 
         }
         
@@ -113,8 +117,8 @@ class PadOverlayDpad(
         updateBounds()
         
         prefs.edit()
-            .putInt("${inputId}_x", area.left)
-            .putInt("${inputId}_y", area.top)
+            .putInt("${inputId}_x", x)
+            .putInt("${inputId}_y", y)
             .apply()
     }
 
