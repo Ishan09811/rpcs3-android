@@ -305,8 +305,8 @@ class PadOverlayDpad(
     }
     
     fun getBounds(): Rect {
-        if (selectedButton != null){
-            val selected = selectedButton ?: return
+        if (selectedButton != null) {
+            val selected = selectedButton ?: return area
             return selected.bounds
         }
         return area
