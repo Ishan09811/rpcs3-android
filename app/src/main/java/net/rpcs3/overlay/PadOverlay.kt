@@ -378,7 +378,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         super.draw(canvas)
         buttons.forEach { button -> button.draw(canvas) }
         dpad.draw(canvas)
-        triangleSquareCircleCross.draw(canvas)
+        //triangleSquareCircleCross.draw(canvas)
         sticks.forEach { it.draw(canvas) }
         floatingSticks.forEach { it?.draw(canvas) }
 
