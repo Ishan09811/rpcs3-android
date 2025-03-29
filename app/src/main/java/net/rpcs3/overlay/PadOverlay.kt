@@ -30,7 +30,7 @@ data class State(
 class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context, attrs) {
     private val buttons: Array<PadOverlayButton>
     private val dpad: PadOverlayDpad
-    private lateinit var triangleSquareCircleCross: PadOverlayDpad
+    private val triangleSquareCircleCross: PadOverlayDpad
     private val state = State()
     private val leftStick: PadOverlayStick
     private val rightStick: PadOverlayStick
@@ -106,7 +106,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
             false
         )
 
-        /*triangleSquareCircleCross = createDpad(
+        triangleSquareCircleCross = createDpad(
             "triangleSquareCircleCross", btnAreaX - buttonSize / 2, btnAreaY, buttonSize * 3, buttonSize * 3,
             buttonSize,
             buttonSize,
@@ -120,7 +120,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
             R.drawable.cross,
             Digital2Flags.CELL_PAD_CTRL_CROSS.bit,
             true
-        )*/
+        )
 
         leftStick = PadOverlayStick(
             resources,
@@ -378,7 +378,7 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
         super.draw(canvas)
         buttons.forEach { button -> button.draw(canvas) }
         dpad.draw(canvas)
-        //triangleSquareCircleCross.draw(canvas)
+        triangleSquareCircleCross.draw(canvas)
         sticks.forEach { it.draw(canvas) }
         floatingSticks.forEach { it?.draw(canvas) }
 
