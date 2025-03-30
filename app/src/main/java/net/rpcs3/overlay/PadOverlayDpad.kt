@@ -278,7 +278,7 @@ class PadOverlayDpad(
     }
     
     fun getBounds(): Rect {
-        return drawableTop.bounds
+        return area
     }
     
     fun draw(canvas: Canvas) {
