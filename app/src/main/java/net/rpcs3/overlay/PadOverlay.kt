@@ -261,6 +261,11 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
                             dpad.startDragging(x, y)
                             hit = true
                         }
+                        if (triangleSquareCircleCross.contains(x, y)) {
+                            selectedInput = triangleSquareCircleCross
+                            triangleSquareCircleCross.startDragging(x, y)
+                            hit = true
+                        }
                     }
                     MotionEvent.ACTION_MOVE -> {
                         buttons.forEach { button ->
@@ -273,12 +278,17 @@ class PadOverlay(context: Context?, attrs: AttributeSet?) : SurfaceView(context,
                             dpad.updatePosition(x, y)
                             hit = true
                         }
+                        if (triangleSquareCircleCross.contains(x, y)) {
+                            triangleSquareCircleCross.updatePosition(x, y)
+                            hit = true
+                        }
                     }
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                         buttons.forEach { button ->
                             button.stopDragging()
                         }
                         dpad.stopDragging()
+                        triangleSquareCircleCross.stopDragging()
                     }
                 }
                 if (hit) invalidate()
