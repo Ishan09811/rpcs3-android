@@ -56,6 +56,10 @@ class PadOverlayDpad(
     private val prefs: SharedPreferences by lazy { context.getSharedPreferences("PadOverlayPrefs", Context.MODE_PRIVATE) }
     private var offsetX = 0
     private var offsetY = 0
+    // stores the default datas
+    private val defaultArea = area
+    private val defaultButtonWidth = buttonWidth
+    private val defaultButtonHeight = buttonHeight
     var idleAlpha: Int = 255
     var dragging: Boolean = false
 
@@ -98,8 +102,9 @@ class PadOverlayDpad(
         val newHeight = (1024 * scaleFactor).roundToInt()
         val centerX = area.centerX()
         val centerY = area.centerY()
-
+        
         area.set(centerX - newWidth / 2, centerY - newHeight / 2, centerX + newWidth / 2, centerY + newHeight / 2)
+        // FIXME: Implement proper calculation which will work for all buttons
         buttonWidth = newWidth / 2
         buttonHeight = newHeight / 2 - newHeight / 20
         updateBounds()
@@ -117,17 +122,24 @@ class PadOverlayDpad(
     }
 
     fun resetConfigs() {
-        prefs.edit().clear().apply()
-        area.set(100, 100, 250, 250)
+        prefs.edit()
+            .remove("${inputId}_x")
+            .remove("${inputId}_y")
+            .remove("${inputId}_scale")
+            .apply()
+        area = defaultArea
         setOpacity(50)
+        buttonWidth = defaultButtonWidth
+        buttonHeight = defaultButtonHeight
+        updateBounds()
     }
 
     private fun loadSavedPosition() {
         val x = prefs.getInt("${inputId}_x", area.left)
         val y = prefs.getInt("${inputId}_y", area.top)
-        val scale = prefs.getInt("${inputId}_scale", 50)
+        val scale = prefs.getInt("${inputId}_scale", -1)
         updatePosition(x, y, force = true)
-        setScale(scale)
+        if (scale != -1) setScale(scale)
     }
 
     /*fun measureDefaultScale(): Int {
@@ -135,7 +147,7 @@ class PadOverlayDpad(
     }*/
 
     fun getInfo(): Triple<String, Int, Int> {
-        return Triple("Dpad", prefs.getInt("${inputId}_scale", 50), 50)
+        return Triple("Dpad", prefs.getInt("${inputId}_scale", 50), prefs.getInt("${inputId}_scale", 50))
     }
 
     private fun updateBounds() {
